@@ -34,7 +34,8 @@ grow_vertical = 2
 layout_mode = 2
 size_flags_vertical = 4
 
-[node name="getSound" type="Button" parent="VBoxContainer/HBoxContainer"]
+[node name="GetSound" type="Button" parent="VBoxContainer/HBoxContainer"]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 4
@@ -46,6 +47,11 @@ layout_mode = 2
 size_flags_horizontal = 8
 size_flags_vertical = 4
 text = "Stopp lyden"
+
+[node name="Playmode" type="Button" parent="VBoxContainer/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "til spillelister"
 
 [node name="VSeparator" type="VSeparator" parent="VBoxContainer/HBoxContainer"]
 layout_mode = 2
@@ -111,19 +117,28 @@ layout_mode = 2
 text = "Spilleliste-bygger
 Trykk på en sang for å legge til."
 
-[node name="navnboks" type="HBoxContainer" parent="VBoxContainer/ScrollContainer/Tabs/snuttcontainer/Plistbuilder/VBoxContainer"]
+[node name="ListNameEditBox" type="HBoxContainer" parent="VBoxContainer/ScrollContainer/Tabs/snuttcontainer/Plistbuilder/VBoxContainer"]
+unique_name_in_owner = true
 layout_mode = 2
 
-[node name="Label" type="Label" parent="VBoxContainer/ScrollContainer/Tabs/snuttcontainer/Plistbuilder/VBoxContainer/navnboks"]
+[node name="Label" type="Label" parent="VBoxContainer/ScrollContainer/Tabs/snuttcontainer/Plistbuilder/VBoxContainer/ListNameEditBox"]
 layout_mode = 2
 text = "Navn: "
 
-[node name="LineEdit" type="LineEdit" parent="VBoxContainer/ScrollContainer/Tabs/snuttcontainer/Plistbuilder/VBoxContainer/navnboks"]
+[node name="ListNameEntry" type="LineEdit" parent="VBoxContainer/ScrollContainer/Tabs/snuttcontainer/Plistbuilder/VBoxContainer/ListNameEditBox"]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 placeholder_text = "Min Spilleliste"
 
-[node name="Button" type="Button" parent="VBoxContainer/ScrollContainer/Tabs/snuttcontainer/Plistbuilder/VBoxContainer"]
+[node name="ListNameWarn" type="Label" parent="VBoxContainer/ScrollContainer/Tabs/snuttcontainer/Plistbuilder/VBoxContainer/ListNameEditBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0, 0, 1)
+theme_override_colors/font_outline_color = Color(0.764706, 0.764706, 0, 1)
+text = "!!!"
+
+[node name="SavePlaylist" type="Button" parent="VBoxContainer/ScrollContainer/Tabs/snuttcontainer/Plistbuilder/VBoxContainer"]
 layout_mode = 2
 text = "Lagre spilleliste"
 
@@ -149,6 +164,23 @@ unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
 
+[node name="playlistcontainer" type="ScrollContainer" parent="VBoxContainer/ScrollContainer/Tabs"]
+visible = false
+layout_mode = 2
+horizontal_scroll_mode = 0
+vertical_scroll_mode = 2
+
+[node name="newplaylist" type="VBoxContainer" parent="VBoxContainer/ScrollContainer/Tabs/playlistcontainer"]
+layout_mode = 2
+
+[node name="NewPlaylistBtn" type="Button" parent="VBoxContainer/ScrollContainer/Tabs/playlistcontainer/newplaylist"]
+layout_mode = 2
+text = "Trykk her for å lage ny spilleliste"
+
 [connection signal="dir_selected" from="FileDialog" to="." method="_on_file_dialog_dir_selected"]
-[connection signal="pressed" from="VBoxContainer/HBoxContainer/getSound" to="." method="_on_get_sound_pressed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer/GetSound" to="." method="_on_get_sound_pressed"]
 [connection signal="pressed" from="VBoxContainer/HBoxContainer/StopSound" to="." method="_on_stop_sound_pressed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer/Playmode" to="." method="_on_playmode_pressed"]
+[connection signal="text_changed" from="VBoxContainer/ScrollContainer/Tabs/snuttcontainer/Plistbuilder/VBoxContainer/ListNameEditBox/ListNameEntry" to="." method="_on_list_name_entry_text_changed"]
+[connection signal="pressed" from="VBoxContainer/ScrollContainer/Tabs/snuttcontainer/Plistbuilder/VBoxContainer/SavePlaylist" to="." method="_on_save_playlist_pressed"]
+[connection signal="pressed" from="VBoxContainer/ScrollContainer/Tabs/playlistcontainer/newplaylist/NewPlaylistBtn" to="." method="_on_new_playlist_btn_pressed"]
