@@ -64,36 +64,37 @@ text = "til spillelister"
 layout_mode = 2
 theme = ExtResource("1_dc6xq")
 
-[node name="audioinfo" type="HBoxContainer" parent="VBoxContainer/HBoxContainer"]
+[node name="Audioinfo" type="HBoxContainer" parent="VBoxContainer/HBoxContainer"]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 theme = ExtResource("1_dc6xq")
 alignment = 2
 
-[node name="audioname" type="Label" parent="VBoxContainer/HBoxContainer/audioinfo"]
+[node name="audioname" type="Label" parent="VBoxContainer/HBoxContainer/Audioinfo"]
 unique_name_in_owner = true
 layout_mode = 2
 theme = ExtResource("1_dc6xq")
 theme_override_colors/font_color = Color(0.498039, 0.498039, 0.498039, 1)
 text = "INGEN LYD SPILLES"
 
-[node name="VSeparator" type="VSeparator" parent="VBoxContainer/HBoxContainer/audioinfo"]
+[node name="VSeparator" type="VSeparator" parent="VBoxContainer/HBoxContainer/Audioinfo"]
 layout_mode = 2
 theme = ExtResource("1_dc6xq")
 
-[node name="audiotime" type="Label" parent="VBoxContainer/HBoxContainer/audioinfo"]
+[node name="audiotime" type="Label" parent="VBoxContainer/HBoxContainer/Audioinfo"]
 unique_name_in_owner = true
 layout_mode = 2
 theme = ExtResource("1_dc6xq")
 theme_override_colors/font_color = Color(0.498039, 0.498039, 0.498039, 1)
 text = "00:00"
 
-[node name="seperator" type="Label" parent="VBoxContainer/HBoxContainer/audioinfo"]
+[node name="seperator" type="Label" parent="VBoxContainer/HBoxContainer/Audioinfo"]
 layout_mode = 2
 theme = ExtResource("1_dc6xq")
 text = " / "
 
-[node name="audiolength" type="Label" parent="VBoxContainer/HBoxContainer/audioinfo"]
+[node name="audiolength" type="Label" parent="VBoxContainer/HBoxContainer/Audioinfo"]
 unique_name_in_owner = true
 layout_mode = 2
 theme = ExtResource("1_dc6xq")
@@ -204,6 +205,7 @@ vertical_scroll_mode = 2
 
 [node name="newplaylist" type="VBoxContainer" parent="VBoxContainer/ScrollContainer/Tabs/playlistcontainer"]
 layout_mode = 2
+size_flags_horizontal = 3
 theme = ExtResource("1_dc6xq")
 
 [node name="NewPlaylistBtn" type="Button" parent="VBoxContainer/ScrollContainer/Tabs/playlistcontainer/newplaylist"]
@@ -214,6 +216,7 @@ text = "Trykk her for å lage ny spilleliste"
 [node name="PlaylistContainer" type="VBoxContainer" parent="VBoxContainer/ScrollContainer/Tabs/playlistcontainer/newplaylist"]
 unique_name_in_owner = true
 layout_mode = 2
+theme_override_constants/separation = 20
 
 [connection signal="dir_selected" from="FileDialog" to="." method="_on_file_dialog_dir_selected"]
 [connection signal="pressed" from="VBoxContainer/HBoxContainer/GetSound" to="." method="_on_get_sound_pressed"]

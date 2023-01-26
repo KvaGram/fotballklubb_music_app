@@ -97,7 +97,8 @@ func play(path:String):
 	audio.play()
 	
 	if audio.playing == true:
-		%audioname.text = path.get_basename()
+		%audioname.text = path.get_basename().get_file()
+		%Audioinfo.tooltip_text = path
 		%audiolength.text = _tosecminString(audio.stream.get_length())
 		%audiotime.text = _tosecminString(audio.get_playback_position())
 func play_list(path:String, callback:PlaylistController):
@@ -113,6 +114,7 @@ func onAudioFinished():
 	#reset playinfo
 	controller_callback = null
 	%audioname.text = "INGEN LYD SPILLES"
+	%Audioinfo.tooltip_text = ""
 	%audiolength.text = "00:00"
 	%audiotime.text = "00:00"
 
@@ -157,6 +159,7 @@ func update_playlists():
 			%PlaylistContainer.add_child(c)
 			c.play.connect(play_list)
 			c.indexUpdated.connect(update_list_index)
+			c.deleteList.connect(on_delete_list)
 		c.setPlaylist(p.get("list", PackedStringArray([])), p.get("name", "unnamed playlist"))
 		c.setIndex(p.get("index", 0))
 		ci += 1
@@ -198,6 +201,9 @@ func _on_save_playlist_pressed():
 	update_playlists()
 	setmode(Mode.PLAYLIST)
 
+func on_delete_list(name):
+	playlistdata.erase(name)
+	update_playlists()
 
 func _on_list_name_entry_text_changed(_new_text):
 	%ListNameWarn.visible = false

@@ -11,6 +11,9 @@ signal play(track, listcon)
 
 signal indexUpdated(listname, index)
 
+#The track to remove (listname)
+signal deleteList(track)
+
 func setPlaylist(newlist:PackedStringArray, newname:String):
 	list = newlist
 	listName = newname
@@ -51,4 +54,6 @@ func setIndex(newIndex:int):
 	emit_signal("indexUpdated", listName, index)
 func onPlayPressed():
 	emit_signal("play", list[index], self)
+func onDeletePressed():
+	emit_signal("deleteList", listName)
 
