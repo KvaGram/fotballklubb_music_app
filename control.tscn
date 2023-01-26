@@ -1,14 +1,16 @@
-[gd_scene load_steps=2 format=3 uid="uid://cefjslefqebca"]
+[gd_scene load_steps=3 format=3 uid="uid://cefjslefqebca"]
 
 [ext_resource type="Script" path="res://fotball_lyd_kontrol.gd" id="1_110xd"]
+[ext_resource type="Theme" uid="uid://djqyb0vxc86uq" path="res://theme/playlistTheme.tres" id="1_dc6xq"]
 
-[node name="Control" type="Control"]
+[node name="Lydspiller" type="Control"]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme = ExtResource("1_dc6xq")
 script = ExtResource("1_110xd")
 
 [node name="audio" type="AudioStreamPlayer" parent="."]
@@ -29,16 +31,19 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme = ExtResource("1_dc6xq")
 
 [node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 4
+theme = ExtResource("1_dc6xq")
 
 [node name="GetSound" type="Button" parent="VBoxContainer/HBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 4
+theme = ExtResource("1_dc6xq")
 text = "Trykk her for å laste inn snutter"
 
 [node name="StopSound" type="Button" parent="VBoxContainer/HBoxContainer"]
@@ -46,52 +51,63 @@ unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 8
 size_flags_vertical = 4
+theme = ExtResource("1_dc6xq")
 text = "Stopp lyden"
 
 [node name="Playmode" type="Button" parent="VBoxContainer/HBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
+theme = ExtResource("1_dc6xq")
 text = "til spillelister"
 
 [node name="VSeparator" type="VSeparator" parent="VBoxContainer/HBoxContainer"]
 layout_mode = 2
+theme = ExtResource("1_dc6xq")
 
 [node name="audioinfo" type="HBoxContainer" parent="VBoxContainer/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
+theme = ExtResource("1_dc6xq")
 alignment = 2
 
 [node name="audioname" type="Label" parent="VBoxContainer/HBoxContainer/audioinfo"]
 unique_name_in_owner = true
 layout_mode = 2
+theme = ExtResource("1_dc6xq")
 theme_override_colors/font_color = Color(0.498039, 0.498039, 0.498039, 1)
 text = "INGEN LYD SPILLES"
 
 [node name="VSeparator" type="VSeparator" parent="VBoxContainer/HBoxContainer/audioinfo"]
 layout_mode = 2
+theme = ExtResource("1_dc6xq")
 
 [node name="audiotime" type="Label" parent="VBoxContainer/HBoxContainer/audioinfo"]
 unique_name_in_owner = true
 layout_mode = 2
+theme = ExtResource("1_dc6xq")
 theme_override_colors/font_color = Color(0.498039, 0.498039, 0.498039, 1)
 text = "00:00"
 
 [node name="seperator" type="Label" parent="VBoxContainer/HBoxContainer/audioinfo"]
 layout_mode = 2
+theme = ExtResource("1_dc6xq")
 text = " / "
 
 [node name="audiolength" type="Label" parent="VBoxContainer/HBoxContainer/audioinfo"]
 unique_name_in_owner = true
 layout_mode = 2
+theme = ExtResource("1_dc6xq")
 theme_override_colors/font_color = Color(0.498039, 0.498039, 0.498039, 1)
 text = "00.00"
 
 [node name="HSeparator" type="HSeparator" parent="VBoxContainer"]
 layout_mode = 2
+theme = ExtResource("1_dc6xq")
 
 [node name="ScrollContainer" type="ScrollContainer" parent="VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 3
+theme = ExtResource("1_dc6xq")
 vertical_scroll_mode = 0
 
 [node name="Tabs" type="TabContainer" parent="VBoxContainer/ScrollContainer"]
@@ -99,83 +115,105 @@ unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
+theme = ExtResource("1_dc6xq")
 tabs_visible = false
 
 [node name="snuttcontainer" type="HBoxContainer" parent="VBoxContainer/ScrollContainer/Tabs"]
+visible = false
 layout_mode = 2
+theme = ExtResource("1_dc6xq")
 
 [node name="Plistbuilder" type="HBoxContainer" parent="VBoxContainer/ScrollContainer/Tabs/snuttcontainer"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 2
+theme = ExtResource("1_dc6xq")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/ScrollContainer/Tabs/snuttcontainer/Plistbuilder"]
 layout_mode = 2
+theme = ExtResource("1_dc6xq")
 
 [node name="Label" type="Label" parent="VBoxContainer/ScrollContainer/Tabs/snuttcontainer/Plistbuilder/VBoxContainer"]
 layout_mode = 2
+theme = ExtResource("1_dc6xq")
 text = "Spilleliste-bygger
 Trykk på en sang for å legge til."
 
 [node name="ListNameEditBox" type="HBoxContainer" parent="VBoxContainer/ScrollContainer/Tabs/snuttcontainer/Plistbuilder/VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
+theme = ExtResource("1_dc6xq")
 
 [node name="Label" type="Label" parent="VBoxContainer/ScrollContainer/Tabs/snuttcontainer/Plistbuilder/VBoxContainer/ListNameEditBox"]
 layout_mode = 2
+theme = ExtResource("1_dc6xq")
 text = "Navn: "
 
 [node name="ListNameEntry" type="LineEdit" parent="VBoxContainer/ScrollContainer/Tabs/snuttcontainer/Plistbuilder/VBoxContainer/ListNameEditBox"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
+theme = ExtResource("1_dc6xq")
 placeholder_text = "Min Spilleliste"
 
 [node name="ListNameWarn" type="Label" parent="VBoxContainer/ScrollContainer/Tabs/snuttcontainer/Plistbuilder/VBoxContainer/ListNameEditBox"]
 unique_name_in_owner = true
 layout_mode = 2
+theme = ExtResource("1_dc6xq")
 theme_override_colors/font_color = Color(1, 0, 0, 1)
 theme_override_colors/font_outline_color = Color(0.764706, 0.764706, 0, 1)
 text = "!!!"
 
 [node name="SavePlaylist" type="Button" parent="VBoxContainer/ScrollContainer/Tabs/snuttcontainer/Plistbuilder/VBoxContainer"]
 layout_mode = 2
+theme = ExtResource("1_dc6xq")
 text = "Lagre spilleliste"
 
 [node name="HSeparator" type="HSeparator" parent="VBoxContainer/ScrollContainer/Tabs/snuttcontainer/Plistbuilder/VBoxContainer"]
 layout_mode = 2
+theme = ExtResource("1_dc6xq")
 
 [node name="ScrollContainer" type="ScrollContainer" parent="VBoxContainer/ScrollContainer/Tabs/snuttcontainer/Plistbuilder/VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 3
+theme = ExtResource("1_dc6xq")
 horizontal_scroll_mode = 0
 vertical_scroll_mode = 2
 
 [node name="Plistentryeditors" type="VBoxContainer" parent="VBoxContainer/ScrollContainer/Tabs/snuttcontainer/Plistbuilder/VBoxContainer/ScrollContainer"]
 unique_name_in_owner = true
 layout_mode = 2
+theme = ExtResource("1_dc6xq")
 
 [node name="VSeparator" type="VSeparator" parent="VBoxContainer/ScrollContainer/Tabs/snuttcontainer/Plistbuilder"]
 layout_mode = 2
 size_flags_horizontal = 3
+theme = ExtResource("1_dc6xq")
 
 [node name="snutter" type="VFlowContainer" parent="VBoxContainer/ScrollContainer/Tabs/snuttcontainer"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
+theme = ExtResource("1_dc6xq")
 
 [node name="playlistcontainer" type="ScrollContainer" parent="VBoxContainer/ScrollContainer/Tabs"]
-visible = false
 layout_mode = 2
+theme = ExtResource("1_dc6xq")
 horizontal_scroll_mode = 0
 vertical_scroll_mode = 2
 
 [node name="newplaylist" type="VBoxContainer" parent="VBoxContainer/ScrollContainer/Tabs/playlistcontainer"]
 layout_mode = 2
+theme = ExtResource("1_dc6xq")
 
 [node name="NewPlaylistBtn" type="Button" parent="VBoxContainer/ScrollContainer/Tabs/playlistcontainer/newplaylist"]
 layout_mode = 2
+theme = ExtResource("1_dc6xq")
 text = "Trykk her for å lage ny spilleliste"
+
+[node name="PlaylistContainer" type="VBoxContainer" parent="VBoxContainer/ScrollContainer/Tabs/playlistcontainer/newplaylist"]
+unique_name_in_owner = true
+layout_mode = 2
 
 [connection signal="dir_selected" from="FileDialog" to="." method="_on_file_dialog_dir_selected"]
 [connection signal="pressed" from="VBoxContainer/HBoxContainer/GetSound" to="." method="_on_get_sound_pressed"]

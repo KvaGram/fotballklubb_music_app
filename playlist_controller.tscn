@@ -1,0 +1,93 @@
+[gd_scene load_steps=3 format=3 uid="uid://djdhef7exlf5x"]
+
+[ext_resource type="Theme" uid="uid://djqyb0vxc86uq" path="res://theme/playlistTheme.tres" id="1_t7wwp"]
+[ext_resource type="Script" path="res://playlist_controller.gd" id="2_6xlnw"]
+
+[node name="PlaylistController" type="HBoxContainer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_t7wwp")
+script = ExtResource("2_6xlnw")
+
+[node name="PlaylistName" type="Label" parent="."]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 25
+text = "playlist name"
+
+[node name="VSeparator" type="VSeparator" parent="."]
+layout_mode = 2
+
+[node name="listbox" type="HBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="trackinfo" type="VBoxContainer" parent="listbox"]
+layout_mode = 2
+
+[node name="PrevAudioName" type="Label" parent="listbox/trackinfo"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Prev audio
+"
+
+[node name="HSeparator" type="HSeparator" parent="listbox/trackinfo"]
+layout_mode = 2
+
+[node name="CurrentAudioName" type="Label" parent="listbox/trackinfo"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 6
+theme_override_font_sizes/font_size = 25
+text = "Current audio"
+
+[node name="HSeparator2" type="HSeparator" parent="listbox/trackinfo"]
+layout_mode = 2
+
+[node name="NextAudioName" type="Label" parent="listbox/trackinfo"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Next Audio"
+
+[node name="listcontroller" type="VBoxContainer" parent="listbox"]
+layout_mode = 2
+
+[node name="PrevTrack" type="Button" parent="listbox/listcontroller"]
+layout_mode = 2
+text = "△"
+
+[node name="HSeparator3" type="HSeparator" parent="listbox/listcontroller"]
+layout_mode = 2
+
+[node name="IndexAndLen" type="Label" parent="listbox/listcontroller"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "69/101"
+
+[node name="HSeparator4" type="HSeparator" parent="listbox/listcontroller"]
+layout_mode = 2
+
+[node name="NextTrack" type="Button" parent="listbox/listcontroller"]
+layout_mode = 2
+text = "▽"
+
+[node name="VSeparator2" type="VSeparator" parent="."]
+layout_mode = 2
+
+[node name="PlayButton" type="Button" parent="."]
+layout_mode = 2
+theme_override_font_sizes/font_size = 40
+text = "▶ "
+
+[node name="ResetButton" type="LinkButton" parent="."]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0, 0, 1)
+theme_override_font_sizes/font_size = 30
+text = "↺"
+
+[connection signal="pressed" from="listbox/listcontroller/PrevTrack" to="." method="prev"]
+[connection signal="pressed" from="listbox/listcontroller/NextTrack" to="." method="next"]
+[connection signal="pressed" from="PlayButton" to="." method="onPlayPressed"]
+[connection signal="pressed" from="ResetButton" to="." method="reset"]
