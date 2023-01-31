@@ -1,7 +1,8 @@
-[gd_scene load_steps=3 format=3 uid="uid://cefjslefqebca"]
+[gd_scene load_steps=4 format=3 uid="uid://cefjslefqebca"]
 
 [ext_resource type="Script" path="res://fotball_lyd_kontrol.gd" id="1_110xd"]
 [ext_resource type="Theme" uid="uid://djqyb0vxc86uq" path="res://theme/playlistTheme.tres" id="1_dc6xq"]
+[ext_resource type="PackedScene" uid="uid://dn43ygbcsao74" path="res://AudioVisualizer.tscn" id="3_kw2w2"]
 
 [node name="Lydspiller" type="Control"]
 layout_mode = 3
@@ -15,6 +16,7 @@ script = ExtResource("1_110xd")
 
 [node name="audio" type="AudioStreamPlayer" parent="."]
 unique_name_in_owner = true
+bus = &"Analyser"
 
 [node name="FileDialog" type="FileDialog" parent="."]
 unique_name_in_owner = true
@@ -64,42 +66,64 @@ text = "til spillelister"
 layout_mode = 2
 theme = ExtResource("1_dc6xq")
 
-[node name="Audioinfo" type="HBoxContainer" parent="VBoxContainer/HBoxContainer"]
-unique_name_in_owner = true
+[node name="AudioInfoBox" type="Control" parent="VBoxContainer/HBoxContainer"]
 layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Audioinfo" type="HBoxContainer" parent="VBoxContainer/HBoxContainer/AudioInfoBox"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 size_flags_horizontal = 3
 theme = ExtResource("1_dc6xq")
 alignment = 2
 
-[node name="audioname" type="Label" parent="VBoxContainer/HBoxContainer/Audioinfo"]
+[node name="audioname" type="Label" parent="VBoxContainer/HBoxContainer/AudioInfoBox/Audioinfo"]
 unique_name_in_owner = true
 layout_mode = 2
 theme = ExtResource("1_dc6xq")
 theme_override_colors/font_color = Color(0.498039, 0.498039, 0.498039, 1)
 text = "INGEN LYD SPILLES"
 
-[node name="VSeparator" type="VSeparator" parent="VBoxContainer/HBoxContainer/Audioinfo"]
+[node name="VSeparator" type="VSeparator" parent="VBoxContainer/HBoxContainer/AudioInfoBox/Audioinfo"]
 layout_mode = 2
 theme = ExtResource("1_dc6xq")
 
-[node name="audiotime" type="Label" parent="VBoxContainer/HBoxContainer/Audioinfo"]
+[node name="audiotime" type="Label" parent="VBoxContainer/HBoxContainer/AudioInfoBox/Audioinfo"]
 unique_name_in_owner = true
 layout_mode = 2
 theme = ExtResource("1_dc6xq")
 theme_override_colors/font_color = Color(0.498039, 0.498039, 0.498039, 1)
 text = "00:00"
 
-[node name="seperator" type="Label" parent="VBoxContainer/HBoxContainer/Audioinfo"]
+[node name="seperator" type="Label" parent="VBoxContainer/HBoxContainer/AudioInfoBox/Audioinfo"]
 layout_mode = 2
 theme = ExtResource("1_dc6xq")
 text = " / "
 
-[node name="audiolength" type="Label" parent="VBoxContainer/HBoxContainer/Audioinfo"]
+[node name="audiolength" type="Label" parent="VBoxContainer/HBoxContainer/AudioInfoBox/Audioinfo"]
 unique_name_in_owner = true
 layout_mode = 2
 theme = ExtResource("1_dc6xq")
 theme_override_colors/font_color = Color(0.498039, 0.498039, 0.498039, 1)
 text = "00.00"
+
+[node name="Visualizer" parent="VBoxContainer/HBoxContainer/AudioInfoBox" instance=ExtResource("3_kw2w2")]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = 0.0
+offset_bottom = 0.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0, 0.784314, 0, 1)
 
 [node name="HSeparator" type="HSeparator" parent="VBoxContainer"]
 layout_mode = 2
@@ -120,7 +144,6 @@ theme = ExtResource("1_dc6xq")
 tabs_visible = false
 
 [node name="snuttcontainer" type="HBoxContainer" parent="VBoxContainer/ScrollContainer/Tabs"]
-visible = false
 layout_mode = 2
 theme = ExtResource("1_dc6xq")
 
@@ -198,6 +221,7 @@ size_flags_vertical = 3
 theme = ExtResource("1_dc6xq")
 
 [node name="playlistcontainer" type="ScrollContainer" parent="VBoxContainer/ScrollContainer/Tabs"]
+visible = false
 layout_mode = 2
 theme = ExtResource("1_dc6xq")
 horizontal_scroll_mode = 0

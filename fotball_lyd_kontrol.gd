@@ -95,6 +95,7 @@ func on_audio_pressed(path:String):
 func play(path:String):
 	audio.stream = load_audio(path)
 	audio.play()
+	%Visualizer.disabled = false
 	
 	if audio.playing == true:
 		%audioname.text = path.get_basename().get_file()
@@ -102,17 +103,26 @@ func play(path:String):
 		%audiolength.text = _tosecminString(audio.stream.get_length())
 		%audiotime.text = _tosecminString(audio.get_playback_position())
 func play_list(path:String, callback:PlaylistController):
+	#disable old visualizer if applicable
+	if controller_callback != null && is_instance_valid(controller_callback):
+		controller_callback.visualizer.disabled = true
+		#pass
+	#set new callback refrence
 	controller_callback = callback
+	#enable new visualizer
+	callback.visualizer.disabled = false
 	play(path)
 func onAudioFinished():
 	#if autoplay, call it from callback
 	if controller_callback != null && is_instance_valid(controller_callback):
 		controller_callback.next()
+		controller_callback.visualizer.disabled = true
 		if false: #autoplay
 			controller_callback.onPlayPressed()
 			return
 	#reset playinfo
 	controller_callback = null
+	%Visualizer.disabled = true
 	%audioname.text = "INGEN LYD SPILLES"
 	%Audioinfo.tooltip_text = ""
 	%audiolength.text = "00:00"

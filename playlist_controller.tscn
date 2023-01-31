@@ -1,8 +1,9 @@
-[gd_scene load_steps=4 format=3 uid="uid://djdhef7exlf5x"]
+[gd_scene load_steps=5 format=3 uid="uid://djdhef7exlf5x"]
 
 [ext_resource type="Theme" uid="uid://djqyb0vxc86uq" path="res://theme/playlistTheme.tres" id="1_t7wwp"]
 [ext_resource type="Script" path="res://playlist_controller.gd" id="2_6xlnw"]
 [ext_resource type="FontFile" uid="uid://bf24kg11u3w5q" path="res://theme/DajaVuSans/DejaVuSans-Bold.ttf" id="3_nil1x"]
+[ext_resource type="PackedScene" uid="uid://dn43ygbcsao74" path="res://AudioVisualizer.tscn" id="4_6n0me"]
 
 [node name="PlaylistController" type="HBoxContainer"]
 anchors_preset = 15
@@ -26,6 +27,7 @@ underline = 1
 
 [node name="PlaylistName" type="Label" parent="."]
 unique_name_in_owner = true
+custom_minimum_size = Vector2(300, 0)
 layout_mode = 2
 theme_override_font_sizes/font_size = 25
 text = "playlist name"
@@ -51,7 +53,19 @@ text = "Prev audio
 [node name="HSeparator" type="HSeparator" parent="listbox/trackinfo"]
 layout_mode = 2
 
-[node name="CurrentAudioName" type="Label" parent="listbox/trackinfo"]
+[node name="Panel" type="PanelContainer" parent="listbox/trackinfo"]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+size_flags_vertical = 6
+
+[node name="visualizer" parent="listbox/trackinfo/Panel" instance=ExtResource("4_6n0me")]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(100, 100)
+layout_mode = 2
+disabled = true
+color = Color(0, 0.85098, 0, 1)
+
+[node name="CurrentAudioName" type="Label" parent="listbox/trackinfo/Panel"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 6
@@ -68,6 +82,7 @@ text = "Next Audio"
 
 [node name="listcontroller" type="VBoxContainer" parent="listbox"]
 layout_mode = 2
+alignment = 1
 
 [node name="PrevTrack" type="Button" parent="listbox/listcontroller"]
 layout_mode = 2

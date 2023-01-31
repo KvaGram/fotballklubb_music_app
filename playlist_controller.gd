@@ -1,10 +1,11 @@
-extends HBoxContainer
+extends Control
 
 class_name PlaylistController
 
 var list:PackedStringArray
 var index:int
 var listName:String
+@onready var visualizer = %visualizer
 
 #The track to play, self-refrence (for callback)
 signal play(track, listcon)
