@@ -13,3 +13,5 @@ data_*/
 .godot/
 
 build/
+quicktest.tscn
+quicktest.gd
