@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=3 uid="uid://dg6iach1bgv3r"]
+[gd_scene load_steps=3 format=3 uid="uid://dg6iach1bgv3r"]
 
 [ext_resource type="Script" path="res://LydspillerSettings.gd" id="1_a3lb4"]
+[ext_resource type="PackedScene" uid="uid://dsf7tou3a10bh" path="res://playlistentryedit.tscn" id="2_lqo5b"]
 
 [node name="Settings" type="Control"]
 layout_mode = 3
@@ -27,6 +28,79 @@ size_flags_vertical = 3
 layout_mode = 2
 size_flags_horizontal = 3
 
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/HSplitContainer/Panel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/HSplitContainer/Panel/VBoxContainer"]
+layout_mode = 2
+
+[node name="btnHelp" type="Button" parent="VBoxContainer/HSplitContainer/Panel/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "HJELP"
+
+[node name="Button" type="Button" parent="VBoxContainer/HSplitContainer/Panel/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Legg til nytt element"
+
+[node name="ScrollContainer" type="ScrollContainer" parent="VBoxContainer/HSplitContainer/Panel/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/HSplitContainer/Panel/VBoxContainer/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="ElementboxEdit" type="VBoxContainer" parent="VBoxContainer/HSplitContainer/Panel/VBoxContainer/ScrollContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Actions" type="HBoxContainer" parent="VBoxContainer/HSplitContainer/Panel/VBoxContainer/ScrollContainer/VBoxContainer/ElementboxEdit"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer/HSplitContainer/Panel/VBoxContainer/ScrollContainer/VBoxContainer/ElementboxEdit/Actions"]
+layout_mode = 2
+text = "Navn "
+
+[node name="LineEdit" type="LineEdit" parent="VBoxContainer/HSplitContainer/Panel/VBoxContainer/ScrollContainer/VBoxContainer/ElementboxEdit/Actions"]
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "Element Navn"
+
+[node name="Button" type="Button" parent="VBoxContainer/HSplitContainer/Panel/VBoxContainer/ScrollContainer/VBoxContainer/ElementboxEdit/Actions"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0, 0, 1)
+text = "X"
+
+[node name="HSeparator" type="HSeparator" parent="VBoxContainer/HSplitContainer/Panel/VBoxContainer/ScrollContainer/VBoxContainer/ElementboxEdit"]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/HSplitContainer/Panel/VBoxContainer/ScrollContainer/VBoxContainer/ElementboxEdit"]
+layout_mode = 2
+
+[node name="VSeparator" type="VSeparator" parent="VBoxContainer/HSplitContainer/Panel/VBoxContainer/ScrollContainer/VBoxContainer/ElementboxEdit/HBoxContainer"]
+custom_minimum_size = Vector2(20, 0)
+layout_mode = 2
+
+[node name="boxContent" type="VBoxContainer" parent="VBoxContainer/HSplitContainer/Panel/VBoxContainer/ScrollContainer/VBoxContainer/ElementboxEdit/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 1.28
+
+[node name="ScrollContainer" type="ScrollContainer" parent="VBoxContainer/HSplitContainer/Panel/VBoxContainer/ScrollContainer/VBoxContainer/ElementboxEdit/HBoxContainer/boxContent"]
+custom_minimum_size = Vector2(0, 150)
+layout_mode = 2
+
+[node name="boxList" type="VBoxContainer" parent="VBoxContainer/HSplitContainer/Panel/VBoxContainer/ScrollContainer/VBoxContainer/ElementboxEdit/HBoxContainer/boxContent/ScrollContainer"]
+layout_mode = 2
+
+[node name="playlistentryedit" parent="VBoxContainer/HSplitContainer/Panel/VBoxContainer/ScrollContainer/VBoxContainer/ElementboxEdit/HBoxContainer/boxContent/ScrollContainer/boxList" instance=ExtResource("2_lqo5b")]
+layout_mode = 2
+
 [node name="Panel2" type="Panel" parent="VBoxContainer/HSplitContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
@@ -43,9 +117,22 @@ grow_vertical = 2
 layout_mode = 2
 text = "Lydfiler"
 
-[node name="Label2" type="LinkButton" parent="VBoxContainer/HSplitContainer/Panel2/VBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/HSplitContainer/Panel2/VBoxContainer"]
+layout_mode = 2
+
+[node name="btnLoadDir" type="Button" parent="VBoxContainer/HSplitContainer/Panel2/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "Åpne mappe"
+
+[node name="txtRootName" type="Label" parent="VBoxContainer/HSplitContainer/Panel2/VBoxContainer/HBoxContainer"]
+unique_name_in_owner = true
 layout_mode = 2
 text = "~/path/to/music/directory/"
+
+[node name="btnUpOneDir" type="Button" parent="VBoxContainer/HSplitContainer/Panel2/VBoxContainer/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "<-"
 
 [node name="HSeparator" type="HSeparator" parent="VBoxContainer/HSplitContainer/Panel2/VBoxContainer"]
 layout_mode = 2
@@ -55,5 +142,25 @@ unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
 column_titles_visible = true
+hide_root = true
 
+[node name="FileDialog" type="FileDialog" parent="."]
+unique_name_in_owner = true
+title = "Open a Directory"
+size = Vector2i(591, 162)
+ok_button_text = "Select This Folder"
+file_mode = 2
+access = 2
+
+[node name="Help" type="AcceptDialog" parent="."]
+unique_name_in_owner = true
+title = "hjelp"
+size = Vector2i(700, 500)
+dialog_text = "Velkommen til lydspiller redigering. Dette vinduet er delt i to. På venstre side styrer du hvilke elementer som skal vises på spillemenyen, og på høyre side navigerer du frem til filer du ønsker å bruke.
+"
+dialog_autowrap = true
+
+[connection signal="pressed" from="VBoxContainer/HSplitContainer/Panel2/VBoxContainer/HBoxContainer/btnLoadDir" to="." method="_on_btn_load_dir_pressed"]
+[connection signal="pressed" from="VBoxContainer/HSplitContainer/Panel2/VBoxContainer/HBoxContainer/btnUpOneDir" to="." method="_on_btn_up_one_dir_pressed"]
 [connection signal="item_activated" from="VBoxContainer/HSplitContainer/Panel2/VBoxContainer/Tree" to="." method="_on_tree_item_activated"]
+[connection signal="dir_selected" from="FileDialog" to="." method="_on_file_dialog_dir_selected"]

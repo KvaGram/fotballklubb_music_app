@@ -23,8 +23,7 @@ func _ready():
 	else:
 		pass #todo start editing a new playlist? I don't know.. something, I guess.
 
-
-func popTreeRecursive(depth:int, localdir:DirAccess, branch:TreeItem):
+func popTreeRecursive(depth:int, localdir:DirAccess, parent:TreeItem):
 	localdir.list_dir_begin()
 	var end:bool = depth >= max_filedepth
 	while true:
@@ -37,7 +36,7 @@ func popTreeRecursive(depth:int, localdir:DirAccess, branch:TreeItem):
 		if ignore_nonmusic and not isAudio and not isDir:
 			#Skip if not a directory nor supported audiofile
 			continue
-		var child:TreeItem = branch.create_child()
+		var child:TreeItem = parent.create_child()
 		child.set_text(0, f)
 		if localdir.current_is_dir():
 			if end:
@@ -57,20 +56,41 @@ func _process(delta):
 func openDir(path):
 	%Tree.clear()
 	var localDir:DirAccess = DirAccess.open(path)
-	var stem:TreeItem = %Tree.create_item()
-	stem.set_text(0, path)
-	popTreeRecursive(0, localDir, stem)
-
-
+	var root:TreeItem = %Tree.create_item()
+	%txtRootName.text = path
+	root.set_text(0, path)
+	popTreeRecursive(0, localDir, root)
+	
 func _on_tree_item_activated():
 	var item:TreeItem = %Tree.get_selected()
 	if not item:
 		return
-	print( getpathTreeitem(item))
+	activateItem(item)
+
+func activateItem(item:TreeItem):
+	var path = getpathTreeitem(item)
+	if path.get_extension() in SUPPORTED:
+		pass #add to active element
+	else:
+		#Presume it is a folder, attempt to navigate to it
+		var dir:DirAccess = DirAccess.open(path)
+		if dir:
+			openDir(dir.get_current_dir())
 	
-#Recursively gets the full path of a TreeItem, presuming text index 0 is the file/dir name, and root/stem contains full a valid path.
+	
+#Recursively gets the full path of a TreeItem, presuming text index 0 is the file/dir name, and root contains full a valid path.
 func getpathTreeitem(item:TreeItem)-> String:
 	if not item:
 		return ""
 	return getpathTreeitem(item.parent).path_join(item.get_text(0))
-	
+#opens file dialog to load a new directory
+func _on_btn_load_dir_pressed():
+	%FileDialog.popup_centered(200,200)
+#redirecting to openDir. Kept seperate in case of future input sanitizing is needed.
+func _on_file_dialog_dir_selected(path):
+	openDir(path)
+func _on_btn_up_one_dir_pressed():
+	var dir:DirAccess = DirAccess.open(dir)
+	if dir.change_dir(".."):
+		openDir(dir.get_current_dir())
+	pass # Replace with function body.
