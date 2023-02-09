@@ -171,7 +171,7 @@ func update_playlists():
 			c.indexUpdated.connect(update_list_index)
 			c.deleteList.connect(on_delete_list)
 		c.setPlaylist(p.get("list", PackedStringArray([])), p.get("name", "unnamed playlist"))
-		c.setIndex(p.get("index", 0))
+		c.setIndex(p.get("play_index", 0))
 		ci += 1
 	#remove excess playlist controllers
 	while ci < clist.size():
@@ -181,7 +181,7 @@ func update_list_index(name, newindex):
 	if not playlistdata.has(name):
 		printerr("Error. playlist % not found"%[name])
 		return
-	playlistdata[name]["index"] = newindex
+	playlistdata[name]["play_index"] = newindex
 func save_data():
 	config.set_value("playlists", "lists", playlistdata)
 	config.set_value("lastused", "dir", dir)

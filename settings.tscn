@@ -64,7 +64,7 @@ size_flags_stretch_ratio = 1.28
 
 [node name="Label" type="Label" parent="VBoxContainer/HSplitContainer/Panel/VBoxContainer/VSplitContainer/boxEditor/VBoxContainer/boxContent"]
 layout_mode = 2
-text = "NY ELLER REDIGER ELEMENT / LISTE"
+text = "NY ELLER REDIGER -  LYD-KNAPP / SPILLELISTE"
 horizontal_alignment = 1
 
 [node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/HSplitContainer/Panel/VBoxContainer/VSplitContainer/boxEditor/VBoxContainer/boxContent"]
@@ -74,29 +74,34 @@ layout_mode = 2
 layout_mode = 2
 text = "Nytt navn:"
 
-[node name="LineEdit" type="LineEdit" parent="VBoxContainer/HSplitContainer/Panel/VBoxContainer/VSplitContainer/boxEditor/VBoxContainer/boxContent/HBoxContainer"]
+[node name="txtListName" type="LineEdit" parent="VBoxContainer/HSplitContainer/Panel/VBoxContainer/VSplitContainer/boxEditor/VBoxContainer/boxContent/HBoxContainer"]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
+placeholder_text = "Navn til lydknapp eller spilleliste"
 
 [node name="ScrollContainer" type="ScrollContainer" parent="VBoxContainer/HSplitContainer/Panel/VBoxContainer/VSplitContainer/boxEditor/VBoxContainer/boxContent"]
 custom_minimum_size = Vector2(0, 150)
 layout_mode = 2
 
-[node name="boxList" type="VBoxContainer" parent="VBoxContainer/HSplitContainer/Panel/VBoxContainer/VSplitContainer/boxEditor/VBoxContainer/boxContent/ScrollContainer"]
+[node name="boxListContent" type="VBoxContainer" parent="VBoxContainer/HSplitContainer/Panel/VBoxContainer/VSplitContainer/boxEditor/VBoxContainer/boxContent/ScrollContainer"]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="playlistentryedit" parent="VBoxContainer/HSplitContainer/Panel/VBoxContainer/VSplitContainer/boxEditor/VBoxContainer/boxContent/ScrollContainer/boxList" instance=ExtResource("2_lqo5b")]
+[node name="playlistentryedit" parent="VBoxContainer/HSplitContainer/Panel/VBoxContainer/VSplitContainer/boxEditor/VBoxContainer/boxContent/ScrollContainer/boxListContent" instance=ExtResource("2_lqo5b")]
 layout_mode = 2
 
 [node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/HSplitContainer/Panel/VBoxContainer/VSplitContainer/boxEditor/VBoxContainer"]
 layout_mode = 2
 
-[node name="btnSave" type="Button" parent="VBoxContainer/HSplitContainer/Panel/VBoxContainer/VSplitContainer/boxEditor/VBoxContainer/HBoxContainer"]
+[node name="btnSaveEdit" type="Button" parent="VBoxContainer/HSplitContainer/Panel/VBoxContainer/VSplitContainer/boxEditor/VBoxContainer/HBoxContainer"]
+unique_name_in_owner = true
 layout_mode = 2
+tooltip_text = "Hvis et annet element deler samme navn, så vil dette overskrive the gamle elementet."
 text = "Lagre og lukk"
 
-[node name="btnCancel" type="Button" parent="VBoxContainer/HSplitContainer/Panel/VBoxContainer/VSplitContainer/boxEditor/VBoxContainer/HBoxContainer"]
+[node name="btnCancelEdit" type="Button" parent="VBoxContainer/HSplitContainer/Panel/VBoxContainer/VSplitContainer/boxEditor/VBoxContainer/HBoxContainer"]
 layout_mode = 2
 text = "Avbryt og lukk"
 
@@ -104,12 +109,13 @@ text = "Avbryt og lukk"
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/HSplitContainer/Panel/VBoxContainer/VSplitContainer/ScrollContainer"]
+[node name="boxListElements" type="VBoxContainer" parent="VBoxContainer/HSplitContainer/Panel/VBoxContainer/VSplitContainer/ScrollContainer"]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="playlistentryedit" parent="VBoxContainer/HSplitContainer/Panel/VBoxContainer/VSplitContainer/ScrollContainer/VBoxContainer" instance=ExtResource("2_lqo5b")]
+[node name="playlistentryedit" parent="VBoxContainer/HSplitContainer/Panel/VBoxContainer/VSplitContainer/ScrollContainer/boxListElements" instance=ExtResource("2_lqo5b")]
 layout_mode = 2
 
 [node name="Panel2" type="Panel" parent="VBoxContainer/HSplitContainer"]
@@ -167,10 +173,20 @@ access = 2
 unique_name_in_owner = true
 title = "hjelp"
 size = Vector2i(700, 500)
-dialog_text = "Velkommen til lydspiller redigering. Dette vinduet er delt i to. På venstre side styrer du hvilke elementer som skal vises på spillemenyen, og på høyre side navigerer du frem til filer du ønsker å bruke.
+dialog_text = "Velkommen til lydspiller redigering. Dette vinduet er delt i to. På venstre side styrer du hvilke lyd-knapper og spillelister som skal vises på spillemenyen, og på høyre side navigerer du frem til filer du ønsker å bruke.
+
+For å lage en lyd-knapp, lagre en liste med kun en lyd. Da vil den vises som en knapp på spillemenyen.
+
+For å lage en spilleliste, lagre en liste med to eller flere lyder. Da vil den vises som en liste på spillemenyen.
+
+(PLANLAGT MEN IKKE IMPLEMENTERT)
+Du kan også bruke en stream-deck eller annen extern ting eller app til å spille av lyder og spillelister. Dette gjøres med websocket protokoll med portnummer (UBESTEMT)
 "
 dialog_autowrap = true
 
+[connection signal="pressed" from="VBoxContainer/HSplitContainer/Panel/VBoxContainer/HBoxContainer/btnHelp" to="." method="_openHelp"]
+[connection signal="pressed" from="VBoxContainer/HSplitContainer/Panel/VBoxContainer/VSplitContainer/boxEditor/VBoxContainer/HBoxContainer/btnSaveEdit" to="." method="saveEditor"]
+[connection signal="pressed" from="VBoxContainer/HSplitContainer/Panel/VBoxContainer/VSplitContainer/boxEditor/VBoxContainer/HBoxContainer/btnCancelEdit" to="." method="clearEditor"]
 [connection signal="pressed" from="VBoxContainer/HSplitContainer/Panel2/VBoxContainer/HBoxContainer/btnLoadDir" to="." method="_on_btn_load_dir_pressed"]
 [connection signal="pressed" from="VBoxContainer/HSplitContainer/Panel2/VBoxContainer/HBoxContainer/btnUpOneDir" to="." method="_on_btn_up_one_dir_pressed"]
 [connection signal="item_activated" from="VBoxContainer/HSplitContainer/Panel2/VBoxContainer/Tree" to="." method="_on_tree_item_activated"]

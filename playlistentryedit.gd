@@ -1,8 +1,10 @@
-extends HBoxContainer
+extends MarginContainer
+
+#Used for listing screen elements for editing, and playlist entries.
 
 var _index:int
 var _text:String
-var _showEdit:bool = false
+var _showEdit:bool
 
 signal delete(index:int)
 signal edit(index:int)
@@ -13,16 +15,16 @@ func set_index(index:int):
 	%Index.text = "[%0d]"%[index+1] #UI counts from 1, internally count from 0
 	%SpinBoxIndex.value = index + 1
 
-func set_path(path:String):
-	_text = path
-	%Path.text = path.get_file().get_basename()
-	self.tooltip_text = path
-	setShowEdit(false)
-func set_name(name:String):
-	_text = name
-	%Path.text = name
-	self.tooltip_text = name
-	setShowEdit(true)
+func set_text(text:String, ispath:bool):
+	_text = text
+	self.tooltip_text = text
+	if ispath:
+		%Text.text = text.get_file().get_basename()
+	else:
+		%Text.text = text
+
+func get_text()->String:
+	return _text
 
 func setShowEdit(val:bool):
 	_showEdit = val
