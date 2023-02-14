@@ -131,4 +131,4 @@ func _tosecminString(sec) -> String:
 
 func switchToSettingsScene():
 	save_data()
-	get_tree().change_scene_to_file("res://settings.tscn")
+	get_tree().change_scene_to_file("res://LydspillerSettings.tscn")
