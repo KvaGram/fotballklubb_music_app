@@ -38,3 +38,7 @@ func _on_delete_pressed():
 func _on_spin_box_index_value_changed(value):
 	var v:int = int(value -1)
 	emit_signal("move", _index, v)
+
+
+func _on_btn_edit_pressed():
+	emit_signal("edit", _index)
