@@ -243,3 +243,8 @@ func onEditListElement(index):
 func _panicRepopulateElements(callername):
 	printerr("Something went wrong with " + callername + " Re-populating element list.")
 	populateElementList()
+
+
+func switchToPlayScene():
+	save_data()
+	get_tree().change_scene_to_file("res://lydspiller_panel.tscn")

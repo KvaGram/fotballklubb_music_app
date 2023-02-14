@@ -1,0 +1,140 @@
+[gd_scene load_steps=5 format=3 uid="uid://df2h115cs0pg3"]
+
+[ext_resource type="Script" path="res://lydspiller_panel.gd" id="1_g2h3u"]
+[ext_resource type="Theme" uid="uid://djqyb0vxc86uq" path="res://theme/playlistTheme.tres" id="2_4mumo"]
+[ext_resource type="PackedScene" uid="uid://dn43ygbcsao74" path="res://AudioVisualizer.tscn" id="3_3oit0"]
+[ext_resource type="PackedScene" uid="uid://djdhef7exlf5x" path="res://playlist_controller.tscn" id="4_uy2j8"]
+
+[node name="LydspillerPanel" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_g2h3u")
+
+[node name="audio" type="AudioStreamPlayer" parent="."]
+unique_name_in_owner = true
+bus = &"Analyser"
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="header" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 4
+theme = ExtResource("2_4mumo")
+
+[node name="btnStop" type="Button" parent="VBoxContainer/header"]
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 4
+theme = ExtResource("2_4mumo")
+text = "Stopp lyden"
+
+[node name="btnSettings" type="Button" parent="VBoxContainer/header"]
+unique_name_in_owner = true
+layout_mode = 2
+theme = ExtResource("2_4mumo")
+text = "Rediger lister og knapper"
+
+[node name="VSeparator" type="VSeparator" parent="VBoxContainer/header"]
+layout_mode = 2
+theme = ExtResource("2_4mumo")
+
+[node name="AudioInfoBox" type="Control" parent="VBoxContainer/header"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Audioinfo" type="HBoxContainer" parent="VBoxContainer/header/AudioInfoBox"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+theme = ExtResource("2_4mumo")
+alignment = 2
+
+[node name="audioname" type="Label" parent="VBoxContainer/header/AudioInfoBox/Audioinfo"]
+unique_name_in_owner = true
+layout_mode = 2
+theme = ExtResource("2_4mumo")
+theme_override_colors/font_color = Color(0.498039, 0.498039, 0.498039, 1)
+text = "INGEN LYD SPILLES"
+
+[node name="VSeparator" type="VSeparator" parent="VBoxContainer/header/AudioInfoBox/Audioinfo"]
+layout_mode = 2
+theme = ExtResource("2_4mumo")
+
+[node name="audiotime" type="Label" parent="VBoxContainer/header/AudioInfoBox/Audioinfo"]
+unique_name_in_owner = true
+layout_mode = 2
+theme = ExtResource("2_4mumo")
+theme_override_colors/font_color = Color(0.498039, 0.498039, 0.498039, 1)
+text = "00:00"
+
+[node name="seperator" type="Label" parent="VBoxContainer/header/AudioInfoBox/Audioinfo"]
+layout_mode = 2
+theme = ExtResource("2_4mumo")
+text = " / "
+
+[node name="audiolength" type="Label" parent="VBoxContainer/header/AudioInfoBox/Audioinfo"]
+unique_name_in_owner = true
+layout_mode = 2
+theme = ExtResource("2_4mumo")
+theme_override_colors/font_color = Color(0.498039, 0.498039, 0.498039, 1)
+text = "00.00"
+
+[node name="Visualizer" parent="VBoxContainer/header/AudioInfoBox" instance=ExtResource("3_3oit0")]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = 0.0
+offset_bottom = 0.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0, 0.784314, 0, 1)
+
+[node name="content" type="ScrollContainer" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="gridPlayElements" type="GridContainer" parent="VBoxContainer/content"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+columns = 2
+
+[node name="example" parent="VBoxContainer/content/gridPlayElements" instance=ExtResource("4_uy2j8")]
+layout_mode = 2
+
+[node name="example2" parent="VBoxContainer/content/gridPlayElements" instance=ExtResource("4_uy2j8")]
+layout_mode = 2
+
+[node name="example3" parent="VBoxContainer/content/gridPlayElements" instance=ExtResource("4_uy2j8")]
+layout_mode = 2
+
+[node name="example4" parent="VBoxContainer/content/gridPlayElements" instance=ExtResource("4_uy2j8")]
+layout_mode = 2
+
+[node name="example5" parent="VBoxContainer/content/gridPlayElements" instance=ExtResource("4_uy2j8")]
+layout_mode = 2
+
+[node name="example6" parent="VBoxContainer/content/gridPlayElements" instance=ExtResource("4_uy2j8")]
+layout_mode = 2
+
+[connection signal="pressed" from="VBoxContainer/header/btnStop" to="." method="stop"]
+[connection signal="pressed" from="VBoxContainer/header/btnSettings" to="." method="switchToSettingsScene"]

@@ -1,129 +1,189 @@
-[gd_scene load_steps=5 format=3 uid="uid://djdhef7exlf5x"]
+[gd_scene load_steps=4 format=3 uid="uid://djdhef7exlf5x"]
 
 [ext_resource type="Theme" uid="uid://djqyb0vxc86uq" path="res://theme/playlistTheme.tres" id="1_t7wwp"]
 [ext_resource type="Script" path="res://playlist_controller.gd" id="2_6xlnw"]
-[ext_resource type="FontFile" uid="uid://bf24kg11u3w5q" path="res://theme/DajaVuSans/DejaVuSans-Bold.ttf" id="3_nil1x"]
 [ext_resource type="PackedScene" uid="uid://dn43ygbcsao74" path="res://AudioVisualizer.tscn" id="4_6n0me"]
 
-[node name="PlaylistController" type="HBoxContainer"]
+[node name="PlaylistController" type="MarginContainer"]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+offset_top = -4.0
+offset_right = -547.0
+offset_bottom = -538.0
 grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 3
 theme = ExtResource("1_t7wwp")
 script = ExtResource("2_6xlnw")
 
-[node name="DeleteButton" type="LinkButton" parent="."]
+[node name="Panel" type="Panel" parent="."]
 layout_mode = 2
-size_flags_horizontal = 0
-size_flags_vertical = 0
-theme = ExtResource("1_t7wwp")
-theme_override_colors/font_color = Color(1, 0, 0, 1)
-theme_override_fonts/font = ExtResource("3_nil1x")
-text = "X"
-underline = 1
 
-[node name="PlaylistName" type="Label" parent="."]
+[node name="visualizer" parent="." instance=ExtResource("4_6n0me")]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(300, 0)
-layout_mode = 2
-theme_override_font_sizes/font_size = 25
-text = "playlist name"
-
-[node name="VSeparator" type="VSeparator" parent="."]
-layout_mode = 2
-
-[node name="listbox" type="HBoxContainer" parent="."]
-layout_mode = 2
-size_flags_horizontal = 3
-alignment = 2
-
-[node name="trackinfo" type="VBoxContainer" parent="listbox"]
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="PrevAudioName" type="Label" parent="listbox/trackinfo"]
-unique_name_in_owner = true
-layout_mode = 2
-text = "Prev audio
-"
-
-[node name="HSeparator" type="HSeparator" parent="listbox/trackinfo"]
-layout_mode = 2
-
-[node name="Panel" type="PanelContainer" parent="listbox/trackinfo"]
-custom_minimum_size = Vector2(300, 0)
-layout_mode = 2
-size_flags_vertical = 6
-
-[node name="visualizer" parent="listbox/trackinfo/Panel" instance=ExtResource("4_6n0me")]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(100, 100)
+custom_minimum_size = Vector2(100, 50)
 layout_mode = 2
 disabled = true
 color = Color(0, 0.85098, 0, 1)
 
-[node name="CurrentAudioName" type="Label" parent="listbox/trackinfo/Panel"]
+[node name="tabContent" type="TabContainer" parent="."]
 unique_name_in_owner = true
 layout_mode = 2
+clip_tabs = false
+tabs_visible = false
+
+[node name="listaudioplayer" type="HBoxContainer" parent="tabContent"]
+layout_mode = 2
+
+[node name="PlaylistName1" type="Label" parent="tabContent/listaudioplayer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+theme_override_font_sizes/font_size = 10
+text = "playlist name"
+
+[node name="VSeparator" type="VSeparator" parent="tabContent/listaudioplayer"]
+layout_mode = 2
+
+[node name="listbox" type="HBoxContainer" parent="tabContent/listaudioplayer"]
+layout_mode = 2
+size_flags_horizontal = 3
+alignment = 2
+
+[node name="trackinfo" type="VBoxContainer" parent="tabContent/listaudioplayer/listbox"]
+layout_mode = 2
+size_flags_horizontal = 3
+alignment = 1
+
+[node name="PrevAudioName" type="Label" parent="tabContent/listaudioplayer/listbox/trackinfo"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 10
+text = "Prev audio
+"
+
+[node name="HSeparator" type="HSeparator" parent="tabContent/listaudioplayer/listbox/trackinfo"]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="tabContent/listaudioplayer/listbox/trackinfo"]
+layout_mode = 2
+
+[node name="CurrentAudioName1" type="Label" parent="tabContent/listaudioplayer/listbox/trackinfo/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
 size_flags_vertical = 6
-theme_override_font_sizes/font_size = 25
+size_flags_stretch_ratio = 5.0
+theme_override_font_sizes/font_size = 15
 text = "Current audio"
 
-[node name="HSeparator2" type="HSeparator" parent="listbox/trackinfo"]
-layout_mode = 2
-
-[node name="NextAudioName" type="Label" parent="listbox/trackinfo"]
+[node name="btnAutoplay1" type="CheckButton" parent="tabContent/listaudioplayer/listbox/trackinfo/HBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
+tooltip_text = "Når aktivert vil neste låt i listen med en gang når den forrige er ferdig.
+Dette kan stoppes ved å dekativere autospill modus, trykke på stopp lyden knappen, eller ved å starte en annen lyd."
+text = "autospill"
+
+[node name="HSeparator2" type="HSeparator" parent="tabContent/listaudioplayer/listbox/trackinfo"]
+layout_mode = 2
+
+[node name="NextAudioName" type="Label" parent="tabContent/listaudioplayer/listbox/trackinfo"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 10
 text = "Next Audio"
 
-[node name="listcontroller" type="VBoxContainer" parent="listbox"]
+[node name="listcontroller" type="VBoxContainer" parent="tabContent/listaudioplayer/listbox"]
 layout_mode = 2
 alignment = 1
 
-[node name="PrevTrack" type="Button" parent="listbox/listcontroller"]
+[node name="PrevTrack" type="Button" parent="tabContent/listaudioplayer/listbox/listcontroller"]
 layout_mode = 2
 text = "△"
 
-[node name="HSeparator3" type="HSeparator" parent="listbox/listcontroller"]
+[node name="HSeparator3" type="HSeparator" parent="tabContent/listaudioplayer/listbox/listcontroller"]
 layout_mode = 2
 
-[node name="IndexAndLen" type="Label" parent="listbox/listcontroller"]
+[node name="boxIndex" type="HBoxContainer" parent="tabContent/listaudioplayer/listbox/listcontroller"]
+layout_mode = 2
+
+[node name="IndexAndLen" type="Label" parent="tabContent/listaudioplayer/listbox/listcontroller/boxIndex"]
 unique_name_in_owner = true
 layout_mode = 2
 text = "69/101"
 
-[node name="HSeparator4" type="HSeparator" parent="listbox/listcontroller"]
+[node name="ResetButton" type="LinkButton" parent="tabContent/listaudioplayer/listbox/listcontroller/boxIndex"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0, 0, 1)
+theme_override_font_sizes/font_size = 20
+text = "↺"
+underline = 2
+
+[node name="HSeparator4" type="HSeparator" parent="tabContent/listaudioplayer/listbox/listcontroller"]
 layout_mode = 2
 
-[node name="NextTrack" type="Button" parent="listbox/listcontroller"]
+[node name="NextTrack" type="Button" parent="tabContent/listaudioplayer/listbox/listcontroller"]
 layout_mode = 2
 text = "▽"
 
-[node name="VSeparator2" type="VSeparator" parent="."]
+[node name="VSeparator2" type="VSeparator" parent="tabContent/listaudioplayer"]
 layout_mode = 2
 
-[node name="PlayButton" type="Button" parent="."]
+[node name="PlayButton" type="Button" parent="tabContent/listaudioplayer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 40
 text = "▶ "
 
-[node name="resetbox" type="VBoxContainer" parent="."]
+[node name="singleaudioplayer" type="VBoxContainer" parent="tabContent"]
+visible = false
 layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="tabContent/singleaudioplayer"]
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.5
 alignment = 1
 
-[node name="ResetButton" type="LinkButton" parent="resetbox"]
+[node name="PlaylistName2" type="Label" parent="tabContent/singleaudioplayer/HBoxContainer"]
+unique_name_in_owner = true
 layout_mode = 2
-theme_override_colors/font_color = Color(1, 0, 0, 1)
-theme_override_font_sizes/font_size = 30
-text = "↺"
-underline = 2
+size_flags_vertical = 6
+size_flags_stretch_ratio = 5.0
+theme_override_font_sizes/font_size = 10
+text = "Current audio"
 
-[connection signal="pressed" from="DeleteButton" to="." method="onDeletePressed"]
-[connection signal="pressed" from="listbox/listcontroller/PrevTrack" to="." method="prev"]
-[connection signal="pressed" from="listbox/listcontroller/NextTrack" to="." method="next"]
-[connection signal="pressed" from="PlayButton" to="." method="onPlayPressed"]
-[connection signal="pressed" from="resetbox/ResetButton" to="." method="reset"]
+[node name="HSeparator" type="HSeparator" parent="tabContent/singleaudioplayer/HBoxContainer"]
+layout_mode = 2
+
+[node name="CurrentAudioName2" type="Label" parent="tabContent/singleaudioplayer/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 6
+size_flags_stretch_ratio = 5.0
+theme_override_font_sizes/font_size = 15
+text = "Current audio"
+
+[node name="btnAutoplay2" type="CheckButton" parent="tabContent/singleaudioplayer/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 4
+tooltip_text = "Når aktivert vil låten spiller om igjen og om igjen til autospill er deaktivert, bruker trykker på \"Stopp lyden\" eller bruker starter en annen lyd."
+text = "autospill"
+
+[node name="PlayButton" type="Button" parent="tabContent/singleaudioplayer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+size_flags_stretch_ratio = 5.0
+theme_override_font_sizes/font_size = 40
+text = "▶ "
+
+[connection signal="toggled" from="tabContent/listaudioplayer/listbox/trackinfo/HBoxContainer/btnAutoplay1" to="." method="setAuto"]
+[connection signal="pressed" from="tabContent/listaudioplayer/listbox/listcontroller/PrevTrack" to="." method="prev"]
+[connection signal="pressed" from="tabContent/listaudioplayer/listbox/listcontroller/boxIndex/ResetButton" to="." method="reset"]
+[connection signal="pressed" from="tabContent/listaudioplayer/listbox/listcontroller/NextTrack" to="." method="next"]
+[connection signal="pressed" from="tabContent/listaudioplayer/PlayButton" to="." method="onPlayPressed"]
+[connection signal="toggled" from="tabContent/singleaudioplayer/HBoxContainer/btnAutoplay2" to="." method="setAuto"]
+[connection signal="pressed" from="tabContent/singleaudioplayer/PlayButton" to="." method="onPlayPressed"]
