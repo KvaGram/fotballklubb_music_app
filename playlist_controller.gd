@@ -6,11 +6,14 @@ var listdata:Dictionary
 
 var list:PackedStringArray
 var listName:String
+var _playing:bool = false
 
 @onready var visualizer = %visualizer
 
 #The track to play, self-refrence (for callback)
 signal play(track, listcon)
+#local stop-button
+signal stop()
 
 func setPlaylist(newListdata:Dictionary):
 	listdata = newListdata
@@ -70,4 +73,15 @@ func setIndex(value:int):
 	refresh()
 	
 func onPlayPressed():
-	emit_signal("play", list[getIndex()], self)
+	if _playing:
+		emit_signal("stop")
+	else:
+		emit_signal("play", list[getIndex()], self)
+
+func isPlaying()->bool:
+	return _playing
+func setPlaying(value:bool):
+	_playing = value
+	visualizer.disabled = !_playing
+	for btn in [%btnPlay1, %btnPlay2]:
+		btn.text = "■" if _playing else "▶"

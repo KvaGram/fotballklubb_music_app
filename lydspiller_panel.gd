@@ -5,6 +5,7 @@ var _config_path:String = "user://listdata.cfg"
 
 var audio:AudioStreamPlayer
 var was_playing_audio:bool = false
+var wasStopped:bool = false #flags that the stop function was used to stop audio. list should not advance, and autoplay should be bypassed.
 var controller_callback:PlaylistController = null
 #var playlist_mode:bool = false
 var playlistdata:Dictionary = {}
@@ -48,9 +49,10 @@ func save_data():
 func onAudioFinished():
 	#if autoplay, call it from callback
 	if controller_callback != null && is_instance_valid(controller_callback):
-		controller_callback.next()
-		controller_callback.visualizer.disabled = true
-		if controller_callback.getAuto():
+		if not wasStopped:
+			controller_callback.next()
+		controller_callback.setPlaying(false)
+		if not wasStopped and controller_callback.getAuto():
 			controller_callback.onPlayPressed()
 			return
 	#reset playinfo
@@ -60,6 +62,7 @@ func onAudioFinished():
 	%Audioinfo.tooltip_text = ""
 	%audiolength.text = "00:00"
 	%audiotime.text = "00:00"
+	wasStopped = false
 
 #populates the gridPlayElements with playlistcontroller instances.
 func populateGrid():
@@ -72,6 +75,7 @@ func populateGrid():
 		var n:PlaylistController = playlistcontroller.instantiate()
 		n.setPlaylist(e)
 		n.play.connect(play)
+		n.stop.connect(stop)
 		var i = e.get("list_index", -1)
 		if(i < 0 or i > entries.size()):
 			entries.append(n) #in the event of indecies missing or out of range
@@ -86,16 +90,18 @@ func populateGrid():
 
 func stop():
 	audio.stop()
+	wasStopped = true
 
 func play(path:String, callback:PlaylistController = null):
 	#disable old visualizer if applicable
 	if controller_callback != null && is_instance_valid(controller_callback):
-		controller_callback.visualizer.disabled = true
+		controller_callback.setPlaying(false)
 		#pass
 	#set new callback refrence
 	controller_callback = callback
 	#enable new visualizer
-	callback.visualizer.disabled = false
+	if(callback):
+		callback.setPlaying(true)
 	audio.stream = load_audio(path)
 	audio.play()
 	%Visualizer.disabled = false
