@@ -80,10 +80,12 @@ func _parseMessage(m:String, c:StreamPeerTCP):
 			send_string(c, "Error. No matching command. Echo: " + m)
 			
 func send_string(c:StreamPeerTCP, m:String):
-	c.put_string(m)
+	c.put_utf8_string(m)
 #sends one playlist/button data
 func send_listdata(c:StreamPeerTCP, data:Dictionary):
-	c.put_var(data, true) 
+	#c.put_utf8_string(JSON.stringify(data))
+	c.put_data(JSON.stringify(data).to_utf8_buffer())
 #sends all the playlists/buttons data
 func send_all_listdata(c:StreamPeerTCP, data:Dictionary):
-	c.put_var(data, true) #test result: not satisfactory. must format manually.
+	#c.put_utf8_string(JSON.stringify(data))
+	c.put_data(JSON.stringify(data).to_utf8_buffer())
