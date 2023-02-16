@@ -128,7 +128,28 @@ func _tosecminString(sec) -> String:
 	var m:int = int(sec) / 60
 	return "%02d:%02d" % [m, s]
 
-
 func switchToSettingsScene():
 	save_data()
 	get_tree().change_scene_to_file("res://LydspillerSettings.tscn")
+
+## Server interaction
+func _on_server_stop_audio_requested(connection):
+	stop()
+	%Server.send_string(connection, "Confirmed. stopping audio")
+
+func _on_server_play_list_requested(connection, index):
+	if index < 0 or index >= %gridPlayElements.get_child_count():
+		%Server.send_string(connection, "Error: out of range")
+		return
+	%gridPlayElements.get_child(index).onPlayPressed()
+	%Server.send_string(connection, "Confirmed. playing audio")
+
+func _on_server_list_data_requested(connection, index):
+	if index < 0 or index >= %gridPlayElements.get_child_count():
+		%Server.send_string(connection, "Error: out of range")
+		return
+	var data = %gridPlayElements.get_child(index).listdata
+	%Server.send_listdata(connection, data)
+
+func _on_server_list_data_all_requested(connection):
+	%Server.send_all_listdata(connection, playlistdata)

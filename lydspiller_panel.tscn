@@ -1,6 +1,7 @@
-[gd_scene load_steps=5 format=3 uid="uid://df2h115cs0pg3"]
+[gd_scene load_steps=6 format=3 uid="uid://df2h115cs0pg3"]
 
 [ext_resource type="Script" path="res://lydspiller_panel.gd" id="1_g2h3u"]
+[ext_resource type="Script" path="res://Server.gd" id="2_2knny"]
 [ext_resource type="Theme" uid="uid://djqyb0vxc86uq" path="res://theme/playlistTheme.tres" id="2_4mumo"]
 [ext_resource type="PackedScene" uid="uid://dn43ygbcsao74" path="res://AudioVisualizer.tscn" id="3_3oit0"]
 [ext_resource type="PackedScene" uid="uid://djdhef7exlf5x" path="res://playlist_controller.tscn" id="4_uy2j8"]
@@ -13,6 +14,10 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_g2h3u")
+
+[node name="Server" type="Node" parent="."]
+unique_name_in_owner = true
+script = ExtResource("2_2knny")
 
 [node name="audio" type="AudioStreamPlayer" parent="."]
 unique_name_in_owner = true
@@ -136,5 +141,9 @@ layout_mode = 2
 [node name="example6" parent="VBoxContainer/content/gridPlayElements" instance=ExtResource("4_uy2j8")]
 layout_mode = 2
 
+[connection signal="list_data_all_requested" from="Server" to="." method="_on_server_list_data_all_requested"]
+[connection signal="list_data_requested" from="Server" to="." method="_on_server_list_data_requested"]
+[connection signal="play_list_requested" from="Server" to="." method="_on_server_play_list_requested"]
+[connection signal="stop_audio_requested" from="Server" to="." method="_on_server_stop_audio_requested"]
 [connection signal="pressed" from="VBoxContainer/header/btnStop" to="." method="stop"]
 [connection signal="pressed" from="VBoxContainer/header/btnSettings" to="." method="switchToSettingsScene"]
