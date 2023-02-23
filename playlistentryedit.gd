@@ -56,5 +56,5 @@ func _on_btn_playstop_pressed():
 	emit_signal("playstop", _text, %slidVol.value)
 
 func _on_slid_vol_value_changed(value):
-	%txtVol.text = "%3d %" % [value]
+	%txtVol.text = "%3d %%" % [value]
 

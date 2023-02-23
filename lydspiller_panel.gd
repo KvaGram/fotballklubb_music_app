@@ -7,6 +7,7 @@ var audio:AudioStreamPlayer
 var was_playing_audio:bool = false
 var wasStopped:bool = false #flags that the stop function was used to stop audio. list should not advance, and autoplay should be bypassed.
 var controller_callback:PlaylistController = null
+var master_volume:int
 #var playlist_mode:bool = false
 var playlistdata:Dictionary = {}
 
@@ -26,6 +27,7 @@ func _ready():
 	populateGrid()
 	#Do not quit application automatically.
 	get_tree().set_auto_accept_quit(false)
+	_on_slid_vol_value_changed(50) #todo: load from config?
 
 func _process(_delta):
 	if audio.playing == true:
@@ -92,17 +94,20 @@ func stop():
 	audio.stop()
 	wasStopped = true
 
-func play(path:String, callback:PlaylistController = null):
+func play(path:String, volume:int, callback:PlaylistController = null):
 	#disable old visualizer if applicable
 	if controller_callback != null && is_instance_valid(controller_callback):
 		controller_callback.setPlaying(false)
 		#pass
+	var volume_db = linear_to_db(float(volume)/100 * float(master_volume)/100)
+		
 	#set new callback refrence
 	controller_callback = callback
 	#enable new visualizer
 	if(callback):
 		callback.setPlaying(true)
 	audio.stream = load_audio(path)
+	audio.volume_db = volume_db
 	audio.play()
 	%Visualizer.disabled = false
 	
@@ -159,3 +164,8 @@ func _on_server_list_data_requested(connection, index):
 
 func _on_server_list_data_all_requested(connection):
 	%Server.send_all_listdata(connection, playlistdata)
+
+#master volume slide
+func _on_slid_vol_value_changed(value):
+	master_volume = value
+	%txtVol.text = "%3d %%" % [value]

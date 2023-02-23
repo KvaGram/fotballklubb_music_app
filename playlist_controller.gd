@@ -4,6 +4,7 @@ class_name PlaylistController
 
 var listdata:Dictionary
 
+var volume:PackedInt32Array
 var list:PackedStringArray
 var listName:String
 var _playing:bool = false
@@ -11,13 +12,20 @@ var _playing:bool = false
 @onready var visualizer = %visualizer
 
 #The track to play, self-refrence (for callback)
-signal play(track, listcon)
+signal play(track, volume, listcon)
 #local stop-button
 signal stop()
 
 func setPlaylist(newListdata:Dictionary):
 	listdata = newListdata
 	list = PackedStringArray(listdata.get("list", []))
+	volume = PackedInt32Array(listdata.get("vol", []))
+	if volume.size() < list.size():
+		var i = volume.size()
+		volume.resize(list.size())
+		while i < list.size():
+			volume[i] = 50
+			i += 1
 	if list.size() < 2:
 		%tabContent.set_current_tab(1) #single mode
 	else:
@@ -76,7 +84,7 @@ func onPlayPressed():
 	if _playing:
 		emit_signal("stop")
 	else:
-		emit_signal("play", list[getIndex()], self)
+		emit_signal("play", list[getIndex()], volume[getIndex()], self)
 
 func isPlaying()->bool:
 	return _playing

@@ -1,10 +1,17 @@
-[gd_scene load_steps=6 format=3 uid="uid://df2h115cs0pg3"]
+[gd_scene load_steps=9 format=3 uid="uid://df2h115cs0pg3"]
 
 [ext_resource type="Script" path="res://lydspiller_panel.gd" id="1_g2h3u"]
 [ext_resource type="Script" path="res://Server.gd" id="2_2knny"]
 [ext_resource type="Theme" uid="uid://djqyb0vxc86uq" path="res://theme/playlistTheme.tres" id="2_4mumo"]
 [ext_resource type="PackedScene" uid="uid://dn43ygbcsao74" path="res://AudioVisualizer.tscn" id="3_3oit0"]
+[ext_resource type="Texture2D" uid="uid://b22l4od7200sk" path="res://lydknobb.png" id="4_cgpxc"]
 [ext_resource type="PackedScene" uid="uid://djdhef7exlf5x" path="res://playlist_controller.tscn" id="4_uy2j8"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_eg6bf"]
+bg_color = Color(0.278431, 0.72549, 0.905882, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_tqd3i"]
+bg_color = Color(0.564706, 0.811765, 0.870588, 1)
 
 [node name="LydspillerPanel" type="Control"]
 layout_mode = 3
@@ -48,6 +55,25 @@ unique_name_in_owner = true
 layout_mode = 2
 theme = ExtResource("2_4mumo")
 text = "Rediger lister og knapper"
+
+[node name="Label" type="Label" parent="VBoxContainer/header"]
+layout_mode = 2
+text = "Hovedvolum "
+
+[node name="txtVol" type="Label" parent="VBoxContainer/header"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "100%"
+
+[node name="slidVol" type="HSlider" parent="VBoxContainer/header"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+size_flags_vertical = 1
+theme_override_icons/grabber = ExtResource("4_cgpxc")
+theme_override_styles/grabber_area = SubResource("StyleBoxFlat_eg6bf")
+theme_override_styles/grabber_area_highlight = SubResource("StyleBoxFlat_tqd3i")
+value = 50.0
 
 [node name="VSeparator" type="VSeparator" parent="VBoxContainer/header"]
 layout_mode = 2
@@ -147,3 +173,4 @@ layout_mode = 2
 [connection signal="stop_audio_requested" from="Server" to="." method="_on_server_stop_audio_requested"]
 [connection signal="pressed" from="VBoxContainer/header/btnStop" to="." method="stop"]
 [connection signal="pressed" from="VBoxContainer/header/btnSettings" to="." method="switchToSettingsScene"]
+[connection signal="value_changed" from="VBoxContainer/header/slidVol" to="." method="_on_slid_vol_value_changed"]
