@@ -1,5 +1,6 @@
 extends Control
 var config:ConfigFile
+var audio:AudioStreamPlayer
 var _config_path:String = "user://listdata.cfg"
 var currentPath:String = ""
 var playlistdata = {}
@@ -10,6 +11,7 @@ var playlistdata = {}
 const SUPPORTED:PackedStringArray = ["mp3", "wav"]
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	audio = %AudioStreamPlayer
 	config = ConfigFile.new()
 	var status:int = config.load(_config_path)
 	if status == OK:
@@ -41,8 +43,12 @@ func save_data():
 	config.save(_config_path)
 
 func onPlaystop(path:String, vol:int):
-	#%AudioStreamPlayer
-	pass #todo testplayer
+	if audio.playing == true:
+		audio.stop()
+	else:
+		audio.volume_db = linear_to_db(float(vol)/100)
+		audio.stream = Util.load_audio(path)
+		audio.play()
 
 #Tree functions
 
@@ -99,6 +105,7 @@ func activateItem(item:TreeItem):
 	
 	
 #Recursively gets the full path of a TreeItem, presuming text index 0 is the file/folder name, and root contains full a valid path.
+#TODO: The object null error is expected to be fixed in Godot 4 RC3 onward. Restore type hint then.
 #func getpathTreeitem(item:TreeItem)-> String:
 func getpathTreeitem(item)-> String:
 	if not item:

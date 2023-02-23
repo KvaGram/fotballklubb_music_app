@@ -17,6 +17,10 @@ boot_splash/show_image=false
 boot_splash/fullsize=false
 config/icon="res://icon.svg"
 
+[autoload]
+
+Util="*res://util.gd"
+
 [rendering]
 
 renderer/rendering_method="gl_compatibility"

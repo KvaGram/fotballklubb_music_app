@@ -31,7 +31,7 @@ func _ready():
 
 func _process(_delta):
 	if audio.playing == true:
-		%audiotime.text = _tosecminString(audio.get_playback_position())
+		%audiotime.text = Util.tosecminString(audio.get_playback_position())
 		was_playing_audio = true
 	elif was_playing_audio:
 		onAudioFinished()
@@ -106,7 +106,7 @@ func play(path:String, volume:int, callback:PlaylistController = null):
 	#enable new visualizer
 	if(callback):
 		callback.setPlaying(true)
-	audio.stream = load_audio(path)
+	audio.stream = Util.load_audio(path)
 	audio.volume_db = volume_db
 	audio.play()
 	%Visualizer.disabled = false
@@ -114,30 +114,8 @@ func play(path:String, volume:int, callback:PlaylistController = null):
 	if audio.playing == true:
 		%audioname.text = path.get_basename().get_file()
 		%Audioinfo.tooltip_text = path
-		%audiolength.text = _tosecminString(audio.stream.get_length())
-		%audiotime.text = _tosecminString(audio.get_playback_position())
-		
-func load_audio(path:String):
-	var file:FileAccess = FileAccess.open(path, FileAccess.READ)
-	var sound:AudioStream
-	if path.get_extension() == "mp3": # .ends_with(".mp3"):
-		sound = AudioStreamMP3.new()
-		sound.data = file.get_buffer(file.get_length())
-	elif path.get_extension() == "wav": #.ends_with(".wav"):
-		sound = AudioStreamWAV.new()
-		sound.stereo = true
-		sound.format = sound.FORMAT_16_BITS
-		sound.data = file.get_buffer(file.get_length())
-	#elif path.get_extension() == "ogg": #.ends_with(".ogg"):
-	#	sound = AudioStreamOggVorbis.new()
-	#	sound.data = file.get_buffer(file.get_length())
-	file = null #closes file 
-	return sound
-	
-func _tosecminString(sec) -> String:
-	var s:int = int(sec) % 60
-	var m:int = int(sec) / 60
-	return "%02d:%02d" % [m, s]
+		%audiolength.text = Util.tosecminString(audio.stream.get_length())
+		%audiotime.text = Util.tosecminString(audio.get_playback_position())
 
 func switchToSettingsScene():
 	save_data()
