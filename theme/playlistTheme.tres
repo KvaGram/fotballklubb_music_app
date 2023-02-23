@@ -1,6 +1,9 @@
-[gd_resource type="Theme" load_steps=9 format=3 uid="uid://djqyb0vxc86uq"]
+[gd_resource type="Theme" load_steps=14 format=3 uid="uid://djqyb0vxc86uq"]
 
 [ext_resource type="FontFile" uid="uid://drhg6u0u4ltc5" path="res://theme/DajaVuSans/DejaVuSans.ttf" id="1_as7jy"]
+[ext_resource type="Texture2D" uid="uid://b22l4od7200sk" path="res://lydknobb.png" id="2_thiwh"]
+[ext_resource type="Texture2D" uid="uid://chgqtsxf5u1uj" path="res://lydknobb_av.png" id="3_bxbiu"]
+[ext_resource type="Texture2D" uid="uid://cvggdpehbc5dq" path="res://lydknobb_aktiv.png" id="4_gifrb"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_rsxhl"]
 content_margin_left = 4.0
@@ -71,6 +74,12 @@ corner_radius_bottom_right = 3
 corner_radius_bottom_left = 3
 corner_detail = 5
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_2q4ht"]
+bg_color = Color(0, 0.67451, 0.760784, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_580j4"]
+bg_color = Color(0, 0.635294, 0.952941, 1)
+
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hdgly"]
 bg_color = Color(0, 0.482353, 0.231373, 1)
 
@@ -100,7 +109,16 @@ Button/styles/focus = SubResource("StyleBoxFlat_f5shh")
 Button/styles/hover = SubResource("StyleBoxFlat_53qg3")
 Button/styles/normal = SubResource("StyleBoxFlat_d6mno")
 Button/styles/pressed = SubResource("StyleBoxFlat_mhvxc")
+HSlider/icons/grabber = ExtResource("2_thiwh")
+HSlider/icons/grabber_disabled = ExtResource("3_bxbiu")
+HSlider/icons/grabber_highlight = ExtResource("4_gifrb")
+HSlider/styles/grabber_area = SubResource("StyleBoxFlat_2q4ht")
+HSlider/styles/grabber_area_highlight = SubResource("StyleBoxFlat_580j4")
 Label/fonts/font = ExtResource("1_as7jy")
 LinkButton/fonts/font = ExtResource("1_as7jy")
+MarginContainer/constants/margin_bottom = 5
+MarginContainer/constants/margin_left = 5
+MarginContainer/constants/margin_right = 5
+MarginContainer/constants/margin_top = 5
 Panel/styles/panel = SubResource("StyleBoxFlat_hdgly")
 ScrollContainer/styles/panel = SubResource("StyleBoxFlat_o66wq")

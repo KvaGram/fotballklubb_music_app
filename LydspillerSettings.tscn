@@ -188,6 +188,9 @@ Du kan også bruke en stream-deck eller annen extern ting eller app til å spill
 "
 dialog_autowrap = true
 
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+unique_name_in_owner = true
+
 [connection signal="pressed" from="VBoxContainer/HSplitContainer/Panel/VBoxContainer/HBoxContainer/btnHelp" to="." method="_openHelp"]
 [connection signal="pressed" from="VBoxContainer/HSplitContainer/Panel/VBoxContainer/HBoxContainer/btnToPlay" to="." method="switchToPlayScene"]
 [connection signal="pressed" from="VBoxContainer/HSplitContainer/Panel/VBoxContainer/VSplitContainer/boxEditor/VBoxContainer/HBoxContainer/btnSaveEdit" to="." method="saveEditor"]

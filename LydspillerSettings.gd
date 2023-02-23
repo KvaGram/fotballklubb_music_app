@@ -39,7 +39,11 @@ func save_data():
 	config.set_value("playlists", "lists", playlistdata)
 	config.set_value("lastused", "dir", currentPath)
 	config.save(_config_path)
-	
+
+func onPlaystop(path:String, vol:int):
+	#%AudioStreamPlayer
+	pass #todo testplayer
+
 #Tree functions
 
 func popTreeRecursive(depth:int, localdir:DirAccess, parent:TreeItem):
@@ -124,8 +128,8 @@ func populateElementList():
 	for e in playlistdata.values():
 		var n:Node = playlistentryedit.instantiate()
 		var i = e.get("list_index", -1)
-		n.set_text(e.get("name", "unnamed list"), true)
-		n.setShowEdit(true)
+		n.set_mode(PlaylistEntry.ENTRYMODE.LISTENTRY)
+		n.set_text(e.get("name", "unnamed list"))
 		if(i < 0 or i > entries.size()):
 			entries.append(n) #in the event of indecies missing or out of range
 		elif entries[i]: #in case of indicies somehow overlapping
@@ -149,12 +153,13 @@ func clearEditor():
 	
 func addListEntry(path:String):
 	var n:Node = playlistentryedit.instantiate()
-	n.set_text(path, true)
-	n.setShowEdit(false)
+	n.set_mode(PlaylistEntry.ENTRYMODE.AUDIOENTRY)
+	n.set_text(path)
 	n.set_index(%boxListContent.get_child_count())
 	%boxListContent.add_child(n)
 	n.delete.connect(onEditorDeleteListContent)
 	n.move.connect(onEditorMoveListContent)
+	n.playstop.connect(onPlaystop)
 	
 func saveEditor():
 	if not isEditorNameValid():
@@ -171,16 +176,18 @@ func saveEditor():
 	if num < 1:
 		return #Can't save empty list
 	var list:Array[String] = []
+	var vol:Array[int] = []
 	for c in %boxListContent.get_children():
 		list.append(c.get_text())
-	var data = {"list" : list, "name" : listname}
+		vol.append(c.get_vol())
+	var data = {"list" : list, "name" : listname, "volume" : vol}
 	if playlistdata.has(listname):
 		playlistdata[listname].merge(data, true) #this preserves metadata if present
 	else:
 		playlistdata[listname] = data
 		var n:Node = playlistentryedit.instantiate()
-		n.set_text(listname, false)
-		n.setShowEdit(true)
+		n.set_mode(PlaylistEntry.ENTRYMODE.LISTENTRY)
+		n.set_text(listname)
 		n.set_index(%boxListElements.get_child_count())
 		%boxListElements.add_child(n)
 		n.move.connect(onMoveListElement)
