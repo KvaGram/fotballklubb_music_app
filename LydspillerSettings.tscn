@@ -71,6 +71,16 @@ layout_mode = 2
 text = "NY ELLER REDIGER -  LYD-KNAPP / SPILLELISTE"
 horizontal_alignment = 1
 
+[node name="txtWavWarn" type="Label" parent="VBoxContainer/HSplitContainer/Panel/VBoxContainer/VSplitContainer/boxEditor/VBoxContainer/boxContent"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0, 0, 1)
+theme_override_constants/line_spacing = 0
+theme_override_font_sizes/font_size = 8
+text = "Advarsel: Støtte for .wav filer er for tiden begrenset. Dette kan fikses, men for nå,
+hvis lyden kun lager støy, konverter den til mp3, eller ikke bruk den."
+horizontal_alignment = 1
+
 [node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/HSplitContainer/Panel/VBoxContainer/VSplitContainer/boxEditor/VBoxContainer/boxContent"]
 layout_mode = 2
 

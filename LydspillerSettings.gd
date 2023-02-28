@@ -17,7 +17,7 @@ func _ready():
 	if status == OK:
 		currentPath = config.get_value("lastused", "dir", "")
 		playlistdata = config.get_value("playlists", "lists", {})
-	if currentPath != "":
+	if currentPath != "" and DirAccess.dir_exists_absolute(currentPath):
 		openDir(currentPath)
 	else:
 		openDir(OS.get_system_dir(OS.SYSTEM_DIR_MUSIC)) #open OS music directory by default.
@@ -53,6 +53,9 @@ func onPlaystop(path:String, vol:int):
 #Tree functions
 
 func popTreeRecursive(depth:int, localdir:DirAccess, parent:TreeItem):
+	if not localdir:
+		printerr("directory missing")
+		return
 	localdir.list_dir_begin()
 	var end:bool = depth >= max_filedepth
 	while true:
@@ -81,6 +84,9 @@ func popTreeRecursive(depth:int, localdir:DirAccess, parent:TreeItem):
 func openDir(path):
 	%Tree.clear()
 	var localDir:DirAccess = DirAccess.open(path)
+	if not localDir:
+		printerr("%s no directory found"%[path])
+		return
 	var root:TreeItem = %Tree.create_item()
 	%txtRootName.text = path
 	root.set_text(0, path)
@@ -157,8 +163,11 @@ func clearEditor():
 	for c in %boxListContent.get_children():
 		c.free()
 	%txtListName.clear()
+	%txtWavWarn.visible = false
 	
 func addListEntry(path:String):
+	if path.get_extension().contains("wav"):
+		%txtWavWarn.visible = true
 	var n:Node = playlistentryedit.instantiate()
 	n.set_mode(PlaylistEntry.ENTRYMODE.AUDIOENTRY)
 	n.set_text(path)
