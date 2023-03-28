@@ -8,6 +8,30 @@ var playlistdata = {}
 @export var ignore_nonmusic = false #hides filetypes not in SUPPORTED
 @onready var playlistentryedit:PackedScene = preload("res://playlistentryedit.tscn")
 
+var wav_warn_flag:bool=false
+
+const error_text1:String ='Denne musikk-appen støtter .mp3 og noen .wav filer.
+
+Du har forsøkt å laste inn en %s fil 
+i en spilleliste. Dette er ikke støttet.
+'
+const error_text2:String ='Oi da. Noe gikk galt her.
+Du eller programmet forsøkte å laste inn
+%s
+men programmet kan ikke finne denne filen eller mappen.
+'
+const error_text3:String ='Oi da. Noe gikk galt her.
+Programmet prøvde å testspille
+%s
+men lyden ble ikke lastet inn riktig. Er datafilen borte?
+'
+const error_text4:String ='Du legger til en wav fil i en spilleliste.
+Dette er det akuratt nå begrenset støtte for.
+Hvis lyden kommer ut feil, konverter den til en mp3, og legg den inn på nytt.
+
+Denne advarselen vil ikke vises igen før du åpner
+åpner redigeringspanelet på nytt'
+
 const SUPPORTED:PackedStringArray = ["mp3", "wav"]
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -26,6 +50,8 @@ func _ready():
 	populateElementList()
 	#Do not auto accept quit request
 	get_tree().set_auto_accept_quit(false)
+	
+	%ErrorDialog.focus_exited.connect(hide_support_warn)
 #End of _ready
 func _notification(what):
 	#When quit request is recived, run save_data, then comply.
@@ -36,6 +62,13 @@ func _notification(what):
 
 func _openHelp():
 	%Help.popup_centered(Vector2i(800,400))
+
+func show_error(err:String):
+	%ErrorDialog.dialog_text = err
+	%ErrorDialog.popup_centered()
+	%ErrorDialog.grab_focus()
+func hide_support_warn():
+	%ErrorDialog.hide()
 	
 func save_data():
 	config.set_value("playlists", "lists", playlistdata)
@@ -48,6 +81,9 @@ func onPlaystop(path:String, vol:int):
 	else:
 		audio.volume_db = linear_to_db(float(vol)/100)
 		audio.stream = Util.load_audio(path)
+		if not audio.stream or audio.stream.get_length() <= 0:
+			show_error(error_text3 % [path])
+			return
 		audio.play()
 
 #Tree functions
@@ -101,13 +137,15 @@ func _on_tree_item_activated():
 
 func activateItem(item:TreeItem):
 	var path = getpathTreeitem(item)
-	if path.get_extension() in SUPPORTED:
-		addListEntry(path)
+	if DirAccess.dir_exists_absolute(path):
+		openDir(path)
+	elif FileAccess.file_exists(path):
+		if path.get_extension() in SUPPORTED:
+			addListEntry(path)
+		else:
+			show_error(error_text1 % [path.get_extension()]) #display error of unsupported type on screen
 	else:
-		#Presume it is a folder, attempt to navigate to it
-		var d:DirAccess = DirAccess.open(path)
-		if d:
-			openDir(d.get_current_dir())
+		show_error(error_text2 % [path]) #display path not found error
 	
 	
 #Recursively gets the full path of a TreeItem, presuming text index 0 is the file/folder name, and root contains full a valid path.
@@ -163,11 +201,11 @@ func clearEditor():
 	for c in %boxListContent.get_children():
 		c.free()
 	%txtListName.clear()
-	%txtWavWarn.visible = false
 	
 func addListEntry(path:String):
-	if path.get_extension().contains("wav"):
-		%txtWavWarn.visible = true
+	if path.get_extension().contains("wav") and not wav_warn_flag:
+		show_error(error_text4)
+		wav_warn_flag = true
 	var n:Node = playlistentryedit.instantiate()
 	n.set_mode(PlaylistEntry.ENTRYMODE.AUDIOENTRY)
 	n.set_text(path)

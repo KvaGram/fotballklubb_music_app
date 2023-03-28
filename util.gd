@@ -6,7 +6,7 @@ func load_audio(path:String)->AudioStream:
 	var file:FileAccess = FileAccess.open(path, FileAccess.READ)
 	var stream:AudioStream
 	if not file:
-		printerr("file not found")
+		printerr("path %s not found"%[path])
 		return
 	if path.get_extension() == "mp3": # .ends_with(".mp3"):
 		stream = AudioStreamMP3.new()
