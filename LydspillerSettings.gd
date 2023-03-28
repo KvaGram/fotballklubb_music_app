@@ -32,6 +32,13 @@ Hvis lyden kommer ut feil, konverter den til en mp3, og legg den inn på nytt.
 Denne advarselen vil ikke vises igen før du åpner
 åpner redigeringspanelet på nytt'
 
+const error_text5:String ='Du har forsøkt å lage en helt tom spilleliste.
+Dette er ikke mulig. Legg til en lyd eller fler, og prøv igjen'
+
+const error_text6:String ='Du har forsøkt å lage en spilleliste med et ugyldig navn.
+Sørg for at navnet har minst 2 tegn,
+og ikke inneholder noen rare tegn som kanskje ikke støttes.'
+
 const SUPPORTED:PackedStringArray = ["mp3", "wav"]
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -201,6 +208,12 @@ func clearEditor():
 	for c in %boxListContent.get_children():
 		c.free()
 	%txtListName.clear()
+	for i in range(200):
+		var s = "liste %s" % [i]
+		if not s in playlistdata.keys():
+			%txtListName.text = s
+			break;
+	
 	
 func addListEntry(path:String):
 	if path.get_extension().contains("wav") and not wav_warn_flag:
@@ -217,6 +230,7 @@ func addListEntry(path:String):
 	
 func saveEditor():
 	if not isEditorNameValid():
+		show_error(error_text6)
 		return
 	#TODO: reimplement override flag?
 	#	elif playlistdata.has(listname):
@@ -228,6 +242,7 @@ func saveEditor():
 	var listname = %txtListName.text
 	var num = %boxListContent.get_child_count()
 	if num < 1:
+		show_error(error_text5)
 		return #Can't save empty list
 	var list:Array[String] = []
 	var vol:Array[int] = []
