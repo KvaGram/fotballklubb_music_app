@@ -1,0 +1,80 @@
+[gd_scene load_steps=2 format=3 uid="uid://bdbf6ikhsdyps"]
+
+[ext_resource type="Script" path="res://EditorGroupsDialog.gd" id="1_hlogm"]
+
+[node name="groupsDialog" type="AcceptDialog"]
+initial_position = 1
+title = "grupper"
+size = Vector2i(446, 473)
+visible = true
+ok_button_text = "LUKK"
+script = ExtResource("1_hlogm")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+offset_left = 8.0
+offset_top = 8.0
+offset_right = 438.0
+offset_bottom = 424.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer"]
+layout_mode = 2
+
+[node name="ScrollContainer" type="ScrollContainer" parent="HBoxContainer/VBoxContainer"]
+custom_minimum_size = Vector2(200, 200)
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="listGroups" type="VBoxContainer" parent="HBoxContainer/VBoxContainer/ScrollContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="one" type="CheckBox" parent="HBoxContainer/VBoxContainer/ScrollContainer/listGroups"]
+layout_mode = 2
+text = "group1"
+
+[node name="two" type="CheckBox" parent="HBoxContainer/VBoxContainer/ScrollContainer/listGroups"]
+layout_mode = 2
+text = "group2"
+
+[node name="three" type="CheckBox" parent="HBoxContainer/VBoxContainer/ScrollContainer/listGroups"]
+layout_mode = 2
+text = "group3"
+
+[node name="HSeparator" type="HSeparator" parent="HBoxContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="HBoxContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="HBoxContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "ny"
+
+[node name="txtNewGroup" type="LineEdit" parent="HBoxContainer/VBoxContainer/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Button" type="Button" parent="HBoxContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 1, 0, 1)
+text = "+"
+
+[node name="VSeparator" type="VSeparator" parent="HBoxContainer"]
+layout_mode = 2
+
+[node name="info" type="Label" parent="HBoxContainer"]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+text = "Her velger du hvilke grupper denne spillelisten vises for.
+
+Hvis du velger alle eller ingen, vil listen vises for alle grupper.
+Du kan også legge til nye grupper her.
+
+For å slette en gruppe, fjern gruppen fra alle spillelister som bruker den, eller slett spillelistene som bruker gruppen."
+autowrap_mode = 2
+
+[connection signal="pressed" from="HBoxContainer/VBoxContainer/HBoxContainer/Button" to="." method="_on_add_group"]

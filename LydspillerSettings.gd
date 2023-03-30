@@ -4,6 +4,10 @@ var audio:AudioStreamPlayer
 var _config_path:String = "user://listdata.cfg"
 var currentPath:String = ""
 var playlistdata = {}
+var usegroups:PackedStringArray
+
+var selected_index = -1
+
 @export var max_filedepth = 2 #How many levels of subdirectories the fileexplorer will explore. At 0, only the base directory will show, no subdirectories.
 @export var ignore_nonmusic = false #hides filetypes not in SUPPORTED
 @onready var playlistentryedit:PackedScene = preload("res://playlistentryedit.tscn")
@@ -38,6 +42,10 @@ Dette er ikke mulig. Legg til en lyd eller fler, og prøv igjen'
 const error_text6:String ='Du har forsøkt å lage en spilleliste med et ugyldig navn.
 Sørg for at navnet har minst 2 tegn,
 og ikke inneholder noen rare tegn som kanskje ikke støttes.'
+
+const error_text7:String ='Du har forsøkt å legge til "%s" som et gruppenavn, men navnet er ugyldig.
+Dette kan være fordi det er for kort, det må ha minst 2 tegn, har tegn som kanskje ikke støttes,
+eller så er navnet reservert for internt bruk. Eksempel på sistnevnte er "TRASH".'
 
 const SUPPORTED:PackedStringArray = ["mp3", "wav"]
 # Called when the node enters the scene tree for the first time.
@@ -135,6 +143,9 @@ func openDir(path):
 	root.set_text(0, path)
 	currentPath = path
 	popTreeRecursive(0, localDir, root)
+
+func open_group_dialog():
+	%groupsDialog.popup_centered()
 	
 func _on_tree_item_activated():
 	var item:TreeItem = %Tree.get_selected()
@@ -156,9 +167,7 @@ func activateItem(item:TreeItem):
 	
 	
 #Recursively gets the full path of a TreeItem, presuming text index 0 is the file/folder name, and root contains full a valid path.
-#TODO: The object null error is expected to be fixed in Godot 4 RC3 onward. Restore type hint then.
-#func getpathTreeitem(item:TreeItem)-> String:
-func getpathTreeitem(item)-> String:
+func getpathTreeitem(item:TreeItem)-> String:
 	if not item:
 		return ""
 	return getpathTreeitem(item.get_parent()).path_join(item.get_text(0))
@@ -181,19 +190,29 @@ func populateElementList():
 	for n in %boxListElements.get_children():
 		%boxListElements.remove_child(n)
 		n.queue_free()
-	var entries:Array = []
+	var entries:Array = [] #regular entries goes here, and are added first.
+	var trash_entries:Array = [] #trashed entries goes here, and are added last.
 	entries.resize(playlistdata.size())
+	trash_entries.resize(playlistdata.size())
 	for e in playlistdata.values():
 		var n:Node = playlistentryedit.instantiate()
 		var i = e.get("list_index", -1)
 		n.set_mode(PlaylistEntry.ENTRYMODE.LISTENTRY)
 		n.set_text(e.get("name", "unnamed list"))
-		if(i < 0 or i > entries.size()):
-			entries.append(n) #in the event of indecies missing or out of range
-		elif entries[i]: #in case of indicies somehow overlapping
-			entries.append(n)
+		
+		#refrence list to add to.
+		var entryref = entries
+		if "TRASH" in e.get("groups",[]):
+			entryref = trash_entries #defines the entry as trash
+			n.set_trashed(true) 
+		if(i < 0 or i > entryref.size()):
+			entryref.append(n) #in the event of indecies missing or out of range
+		elif entryref[i]: #in case of indicies somehow overlapping
+			entryref.append(n)
 		else:
-			entries[i] = n
+			entryref[i] = n
+	#appends trash entries
+	entries.append_array(trash_entries)
 	for n in entries:
 		if not n:
 			continue
@@ -205,9 +224,11 @@ func populateElementList():
 	
 
 func clearEditor():
+	selected_index = -1
 	for c in %boxListContent.get_children():
 		c.free()
 	%txtListName.clear()
+	%groupsDialog.clearAndUpdate(usegroups)
 	for i in range(200):
 		var s = "liste %s" % [i]
 		if not s in playlistdata.keys():
@@ -245,13 +266,17 @@ func saveEditor():
 		show_error(error_text5)
 		return #Can't save empty list
 	var list:Array[String] = []
+	var groups:Array[String] = %groupsDialog.getSelected()
 	var vol:Array[int] = []
 	for c in %boxListContent.get_children():
 		list.append(c.get_text())
 		vol.append(c.get_vol())
-	var data = {"list" : list, "name" : listname, "volume" : vol}
+	var data = {"list" : list, "name" : listname, "volume" : vol, "groups" : groups}
 	if playlistdata.has(listname):
 		playlistdata[listname].merge(data, true) #this preserves metadata if present
+		if selected_index > 0:
+			#in case list was trashed.
+			%boxListElements.get_child(selected_index).set_trashed(false)
 	else:
 		playlistdata[listname] = data
 		var n:Node = playlistentryedit.instantiate()
@@ -304,10 +329,22 @@ func onDeleteListElement(index):
 	if not c:
 		_panicRepopulateElements("onDeleteListElement")
 		return
-	playlistdata.erase(c.get_text())
-	%boxListElements.remove_child(c)
-	c.queue_free()
-	updateListElementIndex()
+	if not playlistdata.has(c.get_text()):
+		#wtf happened?
+		return
+	var data = playlistdata.get(c.get_text())
+	var g:Array = data.get("groups",[])
+	if "TRASH" in g:
+		#deletes the playlist, for good.
+		playlistdata.erase(c.get_text())
+		%boxListElements.remove_child(c)
+		c.queue_free()
+		updateListElementIndex()
+	else:
+		g.append("TRASH")
+		data["groups"] = g
+		c.set_trashed(true) #sets a deleted theme
+		onMoveListElement(index, -1) #move to buttom of the list
 	
 func onEditListElement(index):
 	clearEditor()
@@ -315,6 +352,9 @@ func onEditListElement(index):
 	%txtListName.text = data.get("name", "")
 	for e in data.get("list", []):
 		addListEntry(e)
+	for g in data.get("groups", []):
+		%groupsDialog.select_by_name(g)
+	selected_index = index
 		
 func _panicRepopulateElements(callername):
 	printerr("Something went wrong with " + callername + " Re-populating element list.")
@@ -324,3 +364,9 @@ func _panicRepopulateElements(callername):
 func switchToPlayScene():
 	save_data()
 	get_tree().change_scene_to_file("res://lydspiller_panel.tscn")
+
+func _on_groups_dialog_bad_group_name(name):
+	show_error(error_text7 % [name])
+
+
+

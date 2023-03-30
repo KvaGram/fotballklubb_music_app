@@ -1,7 +1,8 @@
-[gd_scene load_steps=3 format=3 uid="uid://dg6iach1bgv3r"]
+[gd_scene load_steps=4 format=3 uid="uid://dg6iach1bgv3r"]
 
 [ext_resource type="Script" path="res://LydspillerSettings.gd" id="1_a3lb4"]
 [ext_resource type="PackedScene" uid="uid://dsf7tou3a10bh" path="res://playlistentryedit.tscn" id="2_lqo5b"]
+[ext_resource type="PackedScene" uid="uid://bdbf6ikhsdyps" path="res://editGroups_dialog.tscn" id="3_2xmoc"]
 
 [node name="Settings" type="Control"]
 layout_mode = 3
@@ -84,6 +85,15 @@ layout_mode = 2
 size_flags_horizontal = 3
 placeholder_text = "Navn til lydknapp eller spilleliste"
 
+[node name="VSeparator" type="VSeparator" parent="VBoxContainer/HSplitContainer/Panel/VBoxContainer/VSplitContainer/boxEditor/VBoxContainer/boxContent/HBoxContainer"]
+layout_mode = 2
+
+[node name="btnGroups" type="Button" parent="VBoxContainer/HSplitContainer/Panel/VBoxContainer/VSplitContainer/boxEditor/VBoxContainer/boxContent/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+tooltip_text = "Trykk her for å sette hvilke grupper denne listen skal vises i"
+text = "Vises i 123 grupper"
+
 [node name="ScrollContainer" type="ScrollContainer" parent="VBoxContainer/HSplitContainer/Panel/VBoxContainer/VSplitContainer/boxEditor/VBoxContainer/boxContent"]
 custom_minimum_size = Vector2(0, 150)
 layout_mode = 2
@@ -109,17 +119,20 @@ text = "Lagre og lukk"
 layout_mode = 2
 text = "Avbryt og lukk"
 
-[node name="ScrollContainer" type="ScrollContainer" parent="VBoxContainer/HSplitContainer/Panel/VBoxContainer/VSplitContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/HSplitContainer/Panel/VBoxContainer/VSplitContainer"]
+layout_mode = 2
+
+[node name="ScrollContainer" type="ScrollContainer" parent="VBoxContainer/HSplitContainer/Panel/VBoxContainer/VSplitContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="boxListElements" type="VBoxContainer" parent="VBoxContainer/HSplitContainer/Panel/VBoxContainer/VSplitContainer/ScrollContainer"]
+[node name="boxListElements" type="VBoxContainer" parent="VBoxContainer/HSplitContainer/Panel/VBoxContainer/VSplitContainer/VBoxContainer/ScrollContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="playlistentryedit" parent="VBoxContainer/HSplitContainer/Panel/VBoxContainer/VSplitContainer/ScrollContainer/boxListElements" instance=ExtResource("2_lqo5b")]
+[node name="playlistentryedit" parent="VBoxContainer/HSplitContainer/Panel/VBoxContainer/VSplitContainer/VBoxContainer/ScrollContainer/boxListElements" instance=ExtResource("2_lqo5b")]
 layout_mode = 2
 
 [node name="Panel2" type="Panel" parent="VBoxContainer/HSplitContainer"]
@@ -198,11 +211,17 @@ position = Vector2i(300, 300)
 size = Vector2i(103, 100)
 dialog_text = "Oi da. Noe gikk galt med denne feilmeldingen."
 
+[node name="groupsDialog" parent="." instance=ExtResource("3_2xmoc")]
+unique_name_in_owner = true
+visible = false
+
 [connection signal="pressed" from="VBoxContainer/HSplitContainer/Panel/VBoxContainer/HBoxContainer/btnHelp" to="." method="_openHelp"]
 [connection signal="pressed" from="VBoxContainer/HSplitContainer/Panel/VBoxContainer/HBoxContainer/btnToPlay" to="." method="switchToPlayScene"]
+[connection signal="pressed" from="VBoxContainer/HSplitContainer/Panel/VBoxContainer/VSplitContainer/boxEditor/VBoxContainer/boxContent/HBoxContainer/btnGroups" to="." method="open_group_dialog"]
 [connection signal="pressed" from="VBoxContainer/HSplitContainer/Panel/VBoxContainer/VSplitContainer/boxEditor/VBoxContainer/HBoxContainer/btnSaveEdit" to="." method="saveEditor"]
 [connection signal="pressed" from="VBoxContainer/HSplitContainer/Panel/VBoxContainer/VSplitContainer/boxEditor/VBoxContainer/HBoxContainer/btnCancelEdit" to="." method="clearEditor"]
 [connection signal="pressed" from="VBoxContainer/HSplitContainer/Panel2/VBoxContainer/HBoxContainer/btnLoadDir" to="." method="_on_btn_load_dir_pressed"]
 [connection signal="pressed" from="VBoxContainer/HSplitContainer/Panel2/VBoxContainer/HBoxContainer/btnUpOneDir" to="." method="_on_btn_up_one_dir_pressed"]
 [connection signal="item_activated" from="VBoxContainer/HSplitContainer/Panel2/VBoxContainer/Tree" to="." method="_on_tree_item_activated"]
 [connection signal="dir_selected" from="FileDialog" to="." method="_on_file_dialog_dir_selected"]
+[connection signal="bad_group_name" from="groupsDialog" to="." method="_on_groups_dialog_bad_group_name"]

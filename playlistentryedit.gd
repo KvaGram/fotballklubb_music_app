@@ -58,3 +58,9 @@ func _on_btn_playstop_pressed():
 func _on_slid_vol_value_changed(value):
 	%txtVol.text = "%3d %%" % [value]
 
+func set_trashed(value:bool):
+	if value:
+		self.theme = load("res://theme/deletedTheme.tres")
+	else:
+		self.theme = load("res://theme/playlistTheme.tres")
+	

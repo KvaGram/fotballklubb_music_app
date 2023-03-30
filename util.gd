@@ -2,7 +2,7 @@ extends Node
 #singleton utility static class
 class_name util
 
-func load_audio(path:String)->AudioStream:
+static func load_audio(path:String)->AudioStream:
 	var file:FileAccess = FileAccess.open(path, FileAccess.READ)
 	var stream:AudioStream
 	if not file:
@@ -65,13 +65,25 @@ func load_audio(path:String)->AudioStream:
 	file = null #closes file 
 	return stream
 	
-func tosecminString(sec) -> String:
+static func tosecminString(sec) -> String:
 	var s:int = int(sec) % 60
 	var m:int = int(sec) / 60
 	return "%02d:%02d" % [m, s]
 
-func get8bitCharStringFromfile(file:FileAccess, len:int) -> String:
+static func get8bitCharStringFromfile(file:FileAccess, len:int) -> String:
 	var s:String = ""
 	for i in len:
 		s += char(file.get_8())
 	return s
+
+#Get all groups from playlists. lists only created groups, ignores TRASH.
+static func getAllGroups(playlists:Dictionary) -> PackedStringArray:
+	var groups = []
+	for l in playlists.values():
+		var g:Array[String] = l.get("groups", [])
+		if "TRASH" in g:
+			continue
+		for n in g:
+			if n not in groups:
+				groups.append(n)
+	return PackedStringArray(groups)
