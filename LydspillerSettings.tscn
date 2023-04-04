@@ -225,3 +225,6 @@ visible = false
 [connection signal="item_activated" from="VBoxContainer/HSplitContainer/Panel2/VBoxContainer/Tree" to="." method="_on_tree_item_activated"]
 [connection signal="dir_selected" from="FileDialog" to="." method="_on_file_dialog_dir_selected"]
 [connection signal="bad_group_name" from="groupsDialog" to="." method="_on_groups_dialog_bad_group_name"]
+[connection signal="canceled" from="groupsDialog" to="." method="updateGroupsButton"]
+[connection signal="close_requested" from="groupsDialog" to="." method="updateGroupsButton"]
+[connection signal="confirmed" from="groupsDialog" to="." method="updateGroupsButton"]

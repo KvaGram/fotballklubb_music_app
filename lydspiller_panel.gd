@@ -10,6 +10,8 @@ var controller_callback:PlaylistController = null
 var master_volume:int
 #var playlist_mode:bool = false
 var playlistdata:Dictionary = {}
+var groups:PackedStringArray
+var sel_group:int
 
 var cache:Dictionary #where key is path as a string, value is audiostream.
 var loadrequest:Array
@@ -30,6 +32,23 @@ func _ready():
 	var status:int = config.load(_config_path)
 	if status == OK:
 		playlistdata = config.get_value("playlists", "lists", {})
+	groups = util.getAllGroups(playlistdata)
+	sel_group = -1
+	if status == OK:
+		sel_group = groups.find(config.get_value("playlists", "last_group", ""))
+	for c in %boxGroups.get_children():
+		c.free()
+	for g in groups:
+		var n = Control.new()
+		n.name = g
+		%boxGroups.add_child(n)
+	if groups.size() > 0:
+		if sel_group < 0:
+			sel_group = 0
+			%boxGroups.current_tab = 0
+		else:
+			%boxGroups.current_tab = sel_group
+	
 	populateGrid()
 	#Do not quit application automatically.
 	get_tree().set_auto_accept_quit(false)
@@ -61,6 +80,7 @@ func _notification(what):
 #saves any changes to the playlists. Possible changes are play indicies and autoplay status.
 func save_data():
 	config.set_value("playlists", "lists", playlistdata)
+	config.set_value("playlists", "last_group", "" if sel_group < 0 else groups[sel_group])
 	config.save(_config_path)
 
 func onAudioFinished():
@@ -83,12 +103,17 @@ func onAudioFinished():
 
 #populates the gridPlayElements with playlistcontroller instances.
 func populateGrid():
+	var g:String = "" if sel_group < 0 else groups[sel_group]
 	for c in %gridPlayElements.get_children():
 		%gridPlayElements.remove_child(c)
 		c.queue_free()
 	var entries:Array = []
 	entries.resize(playlistdata.size())
 	for e in playlistdata.values():
+		var listgroups = e.get("groups",[])
+		#If a list is trashed, ignore. If a group is selected, ignore if not in group.
+		if "TRASH" in listgroups or (sel_group > 0 and not g in listgroups):
+			continue
 		var n:PlaylistController = playlistcontroller.instantiate()
 		n.setPlaylist(e)
 		n.play.connect(play)
@@ -166,3 +191,10 @@ func _on_server_list_data_all_requested(connection):
 func _on_slid_vol_value_changed(value):
 	master_volume = value
 	%txtVol.text = "%3d %%" % [value]
+
+
+func changeGroupByIndex(groupindex):
+	if groupindex < 0 or groupindex >= groups.size():
+		return
+	sel_group = groupindex
+	populateGrid()

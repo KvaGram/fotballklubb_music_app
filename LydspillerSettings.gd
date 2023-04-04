@@ -228,7 +228,9 @@ func clearEditor():
 	for c in %boxListContent.get_children():
 		c.free()
 	%txtListName.clear()
+	usegroups = util.getAllGroups(playlistdata)
 	%groupsDialog.clearAndUpdate(usegroups)
+	%btnGroups.text = "Vises i ingen gruppe(r)"
 	for i in range(200):
 		var s = "liste %s" % [i]
 		if not s in playlistdata.keys():
@@ -352,10 +354,22 @@ func onEditListElement(index):
 	%txtListName.text = data.get("name", "")
 	for e in data.get("list", []):
 		addListEntry(e)
+	var g_count = 0
 	for g in data.get("groups", []):
-		%groupsDialog.select_by_name(g)
+		if g == "TRASH":
+			continue
+		%groupsDialog.selectByName(g)
+	updateGroupsButton()
 	selected_index = index
-		
+	
+func updateGroupsButton():
+	var count = %groupsDialog.getSelected().size()
+	if count <= 0:
+		%btnGroups.text = "Vises i ingen gruppe(r)"
+	elif count >= usegroups.size():
+		%btnGroups.text = "Vises i  alle gruppe(r)"
+	else:
+		%btnGroups.text = "vises i %4d gruppe(r)"%[count]
 func _panicRepopulateElements(callername):
 	printerr("Something went wrong with " + callername + " Re-populating element list.")
 	populateElementList()
@@ -365,8 +379,8 @@ func switchToPlayScene():
 	save_data()
 	get_tree().change_scene_to_file("res://lydspiller_panel.tscn")
 
-func _on_groups_dialog_bad_group_name(name):
-	show_error(error_text7 % [name])
+func _on_groups_dialog_bad_group_name(bad_name):
+	show_error(error_text7 % [bad_name])
 
 
 

@@ -70,9 +70,9 @@ static func tosecminString(sec) -> String:
 	var m:int = int(sec) / 60
 	return "%02d:%02d" % [m, s]
 
-static func get8bitCharStringFromfile(file:FileAccess, len:int) -> String:
+static func get8bitCharStringFromfile(file:FileAccess, stringlen:int) -> String:
 	var s:String = ""
-	for i in len:
+	for i in stringlen:
 		s += char(file.get_8())
 	return s
 
@@ -80,7 +80,7 @@ static func get8bitCharStringFromfile(file:FileAccess, len:int) -> String:
 static func getAllGroups(playlists:Dictionary) -> PackedStringArray:
 	var groups = []
 	for l in playlists.values():
-		var g:Array[String] = l.get("groups", [])
+		var g:Array = l.get("groups", [])
 		if "TRASH" in g:
 			continue
 		for n in g:
