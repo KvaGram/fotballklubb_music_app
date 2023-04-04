@@ -3,9 +3,11 @@ extends Control
 class_name PlaylistController
 
 var listdata:Dictionary
+var listlables:Dictionary
 
 var volume:PackedInt32Array
 var list:PackedStringArray
+var refcache:Dictionary #refrence to parent cache
 var listName:String
 var _playing:bool = false
 
@@ -34,6 +36,7 @@ func setPlaylist(newListdata:Dictionary):
 	setAuto(getAuto()) #this updates the buttons.
 	%PlaylistName1.text = listName
 	%PlaylistName2.text = listName
+	%winFullList.title = listName
 	setIndex(getIndex())
 
 func refresh():
@@ -48,7 +51,21 @@ func refresh():
 	%IndexAndLen.text = "%02d / %02d" % [getIndex()+1, list.size()]
 	
 func _getTrackName(path:String) -> String:
-	return path.get_file().get_basename()
+	if path in listlables:
+		return listlables[path]
+	var stream:AudioStream
+	if refcache.has(path):
+		stream = refcache[path]
+	else:
+		stream = util.load_audio(path)
+		refcache[path] = stream
+	
+	var m = floori(stream.get_length() / 60)
+	var s = floori(stream.get_length()) % 60
+	var label:String = "%s - (%02d:%02d)"%[path.get_file().get_basename(), m, s] 
+	listlables[path] = label
+	return label
+	
 	
 func _clampIndex(ind:int) -> int:
 	var s = list.size()
@@ -93,3 +110,21 @@ func setPlaying(value:bool):
 	visualizer.disabled = !_playing
 	for btn in [%btnPlay1, %btnPlay2]:
 		btn.text = "■" if _playing else "▶"
+func onStreamLoaded(path):
+	if path in list:
+		refresh()
+
+
+func _on_index_and_len_pressed():
+	%listFullList.deselect_all()
+	%listFullList.clear()
+	for p in list:
+		%listFullList.add_item(_getTrackName(p))
+	%listFullList.select(getIndex(), true)
+	%winFullList.popup_centered()
+
+
+func setIndexAndPlay(index):
+	setIndex(index)
+	onPlayPressed()
+	%winFullList.hide()

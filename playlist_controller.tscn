@@ -36,40 +36,60 @@ tabs_visible = false
 [node name="listaudioplayer" type="HBoxContainer" parent="tabContent"]
 layout_mode = 2
 
-[node name="PlaylistName1" type="Label" parent="tabContent/listaudioplayer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="tabContent/listaudioplayer"]
+layout_mode = 2
+alignment = 1
+
+[node name="PlaylistName1" type="Label" parent="tabContent/listaudioplayer/VBoxContainer"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 2.0
 theme_override_font_sizes/font_size = 10
 text = "playlist name"
+vertical_alignment = 1
+autowrap_mode = 2
+
+[node name="btnAutoplay1" type="CheckButton" parent="tabContent/listaudioplayer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+tooltip_text = "Når aktivert vil neste låt i listen med en gang når den forrige er ferdig.
+Dette kan stoppes ved å dekativere autospill modus, trykke på stopp lyden knappen, eller ved å starte en annen lyd."
+text = "autospill"
 
 [node name="VSeparator" type="VSeparator" parent="tabContent/listaudioplayer"]
 layout_mode = 2
 
-[node name="listbox" type="HBoxContainer" parent="tabContent/listaudioplayer"]
+[node name="listbox" type="VBoxContainer" parent="tabContent/listaudioplayer"]
 layout_mode = 2
 size_flags_horizontal = 3
 alignment = 2
 
-[node name="trackinfo" type="VBoxContainer" parent="tabContent/listaudioplayer/listbox"]
+[node name="prevContainer" type="HBoxContainer" parent="tabContent/listaudioplayer/listbox"]
 layout_mode = 2
-size_flags_horizontal = 3
-alignment = 1
 
-[node name="PrevAudioName" type="Label" parent="tabContent/listaudioplayer/listbox/trackinfo"]
+[node name="PrevAudioName" type="Label" parent="tabContent/listaudioplayer/listbox/prevContainer"]
 unique_name_in_owner = true
 layout_mode = 2
+size_flags_horizontal = 3
 theme_override_font_sizes/font_size = 10
 text = "Prev audio
 "
 
-[node name="HSeparator" type="HSeparator" parent="tabContent/listaudioplayer/listbox/trackinfo"]
+[node name="PrevTrack" type="Button" parent="tabContent/listaudioplayer/listbox/prevContainer"]
+custom_minimum_size = Vector2(80, 24)
+layout_mode = 2
+size_flags_horizontal = 8
+text = "△"
+
+[node name="HSeparator2" type="HSeparator" parent="tabContent/listaudioplayer/listbox"]
 layout_mode = 2
 
-[node name="HBoxContainer" type="HBoxContainer" parent="tabContent/listaudioplayer/listbox/trackinfo"]
+[node name="currentContainer" type="HBoxContainer" parent="tabContent/listaudioplayer/listbox"]
 layout_mode = 2
 
-[node name="CurrentAudioName1" type="Label" parent="tabContent/listaudioplayer/listbox/trackinfo/HBoxContainer"]
+[node name="CurrentAudioName1" type="Label" parent="tabContent/listaudioplayer/listbox/currentContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
@@ -78,54 +98,52 @@ size_flags_stretch_ratio = 5.0
 theme_override_font_sizes/font_size = 15
 text = "Current audio"
 
-[node name="btnAutoplay1" type="CheckButton" parent="tabContent/listaudioplayer/listbox/trackinfo/HBoxContainer"]
-unique_name_in_owner = true
+[node name="boxIndex" type="HBoxContainer" parent="tabContent/listaudioplayer/listbox/currentContainer"]
+custom_minimum_size = Vector2(80, 24)
 layout_mode = 2
-tooltip_text = "Når aktivert vil neste låt i listen med en gang når den forrige er ferdig.
-Dette kan stoppes ved å dekativere autospill modus, trykke på stopp lyden knappen, eller ved å starte en annen lyd."
-text = "autospill"
-
-[node name="HSeparator2" type="HSeparator" parent="tabContent/listaudioplayer/listbox/trackinfo"]
-layout_mode = 2
-
-[node name="NextAudioName" type="Label" parent="tabContent/listaudioplayer/listbox/trackinfo"]
-unique_name_in_owner = true
-layout_mode = 2
-theme_override_font_sizes/font_size = 10
-text = "Next Audio"
-
-[node name="listcontroller" type="VBoxContainer" parent="tabContent/listaudioplayer/listbox"]
-layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 3
 alignment = 1
 
-[node name="PrevTrack" type="Button" parent="tabContent/listaudioplayer/listbox/listcontroller"]
-layout_mode = 2
-text = "△"
-
-[node name="HSeparator3" type="HSeparator" parent="tabContent/listaudioplayer/listbox/listcontroller"]
-layout_mode = 2
-
-[node name="boxIndex" type="HBoxContainer" parent="tabContent/listaudioplayer/listbox/listcontroller"]
-layout_mode = 2
-
-[node name="IndexAndLen" type="Label" parent="tabContent/listaudioplayer/listbox/listcontroller/boxIndex"]
+[node name="IndexAndLen" type="LinkButton" parent="tabContent/listaudioplayer/listbox/currentContainer/boxIndex"]
 unique_name_in_owner = true
 layout_mode = 2
+tooltip_text = "Klikk her for å se hele listen"
 text = "69/101"
 
-[node name="ResetButton" type="LinkButton" parent="tabContent/listaudioplayer/listbox/listcontroller/boxIndex"]
+[node name="ResetButton" type="LinkButton" parent="tabContent/listaudioplayer/listbox/currentContainer/boxIndex"]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0, 0, 1)
 theme_override_font_sizes/font_size = 20
 text = "↺"
 underline = 2
 
-[node name="HSeparator4" type="HSeparator" parent="tabContent/listaudioplayer/listbox/listcontroller"]
+[node name="HSeparator" type="HSeparator" parent="tabContent/listaudioplayer/listbox"]
 layout_mode = 2
 
-[node name="NextTrack" type="Button" parent="tabContent/listaudioplayer/listbox/listcontroller"]
+[node name="nextContainer" type="HBoxContainer" parent="tabContent/listaudioplayer/listbox"]
 layout_mode = 2
+
+[node name="NextAudioName" type="Label" parent="tabContent/listaudioplayer/listbox/nextContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 10
+text = "Next Audio"
+
+[node name="NextTrack" type="Button" parent="tabContent/listaudioplayer/listbox/nextContainer"]
+custom_minimum_size = Vector2(80, 27)
+layout_mode = 2
+size_flags_horizontal = 8
 text = "▽"
+
+[node name="trackinfo" type="VBoxContainer" parent="tabContent/listaudioplayer/listbox"]
+layout_mode = 2
+size_flags_horizontal = 3
+alignment = 1
+
+[node name="HBoxContainer" type="HBoxContainer" parent="tabContent/listaudioplayer/listbox/trackinfo"]
+layout_mode = 2
 
 [node name="VSeparator2" type="VSeparator" parent="tabContent/listaudioplayer"]
 layout_mode = 2
@@ -182,10 +200,32 @@ size_flags_stretch_ratio = 5.0
 theme_override_font_sizes/font_size = 40
 text = "▶"
 
-[connection signal="toggled" from="tabContent/listaudioplayer/listbox/trackinfo/HBoxContainer/btnAutoplay1" to="." method="setAuto"]
-[connection signal="pressed" from="tabContent/listaudioplayer/listbox/listcontroller/PrevTrack" to="." method="prev"]
-[connection signal="pressed" from="tabContent/listaudioplayer/listbox/listcontroller/boxIndex/ResetButton" to="." method="reset"]
-[connection signal="pressed" from="tabContent/listaudioplayer/listbox/listcontroller/NextTrack" to="." method="next"]
+[node name="winFullList" type="AcceptDialog" parent="."]
+unique_name_in_owner = true
+initial_position = 2
+title = "Spilleliste"
+size = Vector2i(200, 600)
+ok_button_text = "LUKK"
+
+[node name="listFullList" type="ItemList" parent="winFullList"]
+unique_name_in_owner = true
+offset_left = 8.0
+offset_top = 8.0
+offset_right = 192.0
+offset_bottom = 555.0
+size_flags_vertical = 3
+item_count = 3
+item_0/text = "test"
+item_1/text = "test"
+item_2/text = "▸ - test"
+
+[connection signal="toggled" from="tabContent/listaudioplayer/VBoxContainer/btnAutoplay1" to="." method="setAuto"]
+[connection signal="pressed" from="tabContent/listaudioplayer/listbox/prevContainer/PrevTrack" to="." method="prev"]
+[connection signal="pressed" from="tabContent/listaudioplayer/listbox/currentContainer/boxIndex/IndexAndLen" to="." method="_on_index_and_len_pressed"]
+[connection signal="pressed" from="tabContent/listaudioplayer/listbox/currentContainer/boxIndex/ResetButton" to="." method="reset"]
+[connection signal="pressed" from="tabContent/listaudioplayer/listbox/nextContainer/NextTrack" to="." method="next"]
 [connection signal="pressed" from="tabContent/listaudioplayer/btnPlay1" to="." method="onPlayPressed"]
 [connection signal="toggled" from="tabContent/singleaudioplayer/HBoxContainer/btnAutoplay2" to="." method="setAuto"]
 [connection signal="pressed" from="tabContent/singleaudioplayer/btnPlay2" to="." method="onPlayPressed"]
+[connection signal="item_activated" from="winFullList/listFullList" to="." method="setIndexAndPlay"]
+[connection signal="item_selected" from="winFullList/listFullList" to="." method="setIndex"]

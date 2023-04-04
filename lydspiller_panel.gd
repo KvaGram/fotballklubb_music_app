@@ -11,6 +11,9 @@ var master_volume:int
 #var playlist_mode:bool = false
 var playlistdata:Dictionary = {}
 
+var cache:Dictionary #where key is path as a string, value is audiostream.
+var loadrequest:Array
+
 @onready var playlistcontroller:PackedScene = preload("res://playlist_controller.tscn")
 
 func _ready():
@@ -18,6 +21,9 @@ func _ready():
 	%audioname.text = "INGEN LYD SPILLES"
 	%audiolength.text = "00:00"
 	%audiotime.text = "00:00"
+	
+	cache = {}
+	loadrequest = []
 	
 	#load user config
 	config = ConfigFile.new()
@@ -28,6 +34,8 @@ func _ready():
 	#Do not quit application automatically.
 	get_tree().set_auto_accept_quit(false)
 	_on_slid_vol_value_changed(50) #todo: load from config?
+	
+
 
 func _process(_delta):
 	if audio.playing == true:
@@ -35,6 +43,13 @@ func _process(_delta):
 		was_playing_audio = true
 	elif was_playing_audio:
 		onAudioFinished()
+	if loadrequest.size() > 0:
+		nextPreload()
+func nextPreload():
+	var path = loadrequest.pop_front()
+	if cache.has(path):
+		return nextPreload()
+	cache[path] = Util.load_audio(path)	
 
 #Ensure the app does not close untill anything important is saved.
 func _notification(what):
@@ -78,6 +93,8 @@ func populateGrid():
 		n.setPlaylist(e)
 		n.play.connect(play)
 		n.stop.connect(stop)
+		#Adds refrences to the audio stream cache
+		n.refcache = cache
 		var i = e.get("list_index", -1)
 		if(i < 0 or i > entries.size()):
 			entries.append(n) #in the event of indecies missing or out of range
@@ -106,7 +123,9 @@ func play(path:String, volume:int, callback:PlaylistController = null):
 	#enable new visualizer
 	if(callback):
 		callback.setPlaying(true)
-	audio.stream = Util.load_audio(path)
+	if not cache.has(path):
+		cache[path] = Util.load_audio(path)
+	audio.stream = cache[path]
 	audio.volume_db = volume_db
 	audio.play()
 	%Visualizer.disabled = false
