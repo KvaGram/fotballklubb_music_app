@@ -26,7 +26,7 @@
 
 class_name AudioLoader
 
-func report_errors(err, filepath):
+static func report_errors(err, filepath):
 	# See: https://docs.godotengine.org/en/latest/classes/class_@globalscope.html#enum-globalscope-error
 	var result_hash = {
 		ERR_FILE_NOT_FOUND: "File: not found",
@@ -47,18 +47,20 @@ func report_errors(err, filepath):
 	else:
 		print("Unknown error with file ", filepath, " error code: ", err)
 
-func loadfile(filepath):
-	var file = File.new()
-	var err = file.open(filepath, File.READ)
+#filepath is a path, either system absolute, or from project root.
+#loop is loop flag (0=false, 1,2,3 etc. = true) for .mp3 and .ogg. For .wav see LoopMode in documentation.
+static func loadfile(filepath:String, loop:int = 1):
+	var file:FileAccess = FileAccess.open(filepath, FileAccess.READ)
+	var err:int = file.get_error() #enum
 	if err != OK:
 		report_errors(err, filepath)
 		file.close()
-		return AudioStreamSample.new()
+		return AudioStreamWAV.new()
 
 	var bytes = file.get_buffer(file.get_len())
 	# if File is wav
 	if filepath.ends_with(".wav"):
-		var newstream = AudioStreamSample.new()
+		var newstream = AudioStreamWAV.new()
 
 		#---------------------------
 		#parrrrseeeeee!!! :D
@@ -142,20 +144,20 @@ func loadfile(filepath):
 		#get samples and set loop end
 		var samplenum = newstream.data.size() / 4
 		newstream.loop_end = samplenum
-		newstream.loop_mode = 1 #change to 0 or delete this line if you don't want loop, also check out modes 2 and 3 in the docs
+		newstream.loop_mode = loop
 		return newstream  #:D
 
 	#if file is ogg
-	elif filepath.ends_with(".ogg"):
-		var newstream = AudioStreamOGGVorbis.new()
-		newstream.loop = true #set to false or delete this line if you don't want to loop
-		newstream.data = bytes
-		return newstream
+#	elif filepath.ends_with(".ogg"):
+#		var newstream = AudioStreamOggVorbis.new()
+#		newstream.loop = bool(loop)
+#		newstream.packet_sequence = OggPacketSequence.new() # no known way to create or convert OggPacketSequence data 
+#		return newstream
 
 	#if file is mp3
 	elif filepath.ends_with(".mp3"):
 		var newstream = AudioStreamMP3.new()
-		newstream.loop = true #set to false or delete this line if you don't want to loop
+		newstream.loop = bool(loop)
 		newstream.data = bytes
 		return newstream
 
@@ -173,9 +175,9 @@ func loadfile(filepath):
 # And the 32bit case abour 50% slower
 # I don't wanna risk it always being slower on other files
 # And really, the solution would be to handle it in a low-level language
-func convert_to_16bit(data: PoolByteArray, from: int) -> PoolByteArray:
+static func convert_to_16bit(data: PackedByteArray, from: int) -> PackedByteArray:
 	print("converting to 16-bit from %d" % from)
-	var time = OS.get_ticks_msec()
+	var time = Time.get_ticks_msec()
 	# 24 bit .wav's are typically stored as integers
 	# so we just grab the 2 most significant bytes and ignore the other
 	if from == 24:
@@ -192,13 +194,13 @@ func convert_to_16bit(data: PoolByteArray, from: int) -> PoolByteArray:
 		var single_float: float
 		var value: int
 		for i in range(0, data.size(), 4):
-			spb.data_array = data.subarray(i, i+3)
+			spb.data_array = data.slice(i, i+4)
 			single_float = spb.get_float()
 			value = single_float * 32768
 			data[i/2] = value
 			data[i/2+1] = value >> 8
 		data.resize(data.size() / 2)
-	print("Took %f seconds for slow conversion" % ((OS.get_ticks_msec() - time) / 1000.0))
+	print("Took %f seconds for slow conversion" % ((Time.get_ticks_msec() - time) / 1000.0))
 	return data
 
 
