@@ -228,7 +228,7 @@ func clearEditor():
 	for c in %boxListContent.get_children():
 		c.free()
 	%txtListName.clear()
-	usegroups = util.getAllGroups(playlistdata)
+	usegroups = Util.getAllGroups(playlistdata)
 	%groupsDialog.clearAndUpdate(usegroups)
 	%btnGroups.text = "Vises i ingen gruppe(r)"
 	for i in range(200):
@@ -275,10 +275,13 @@ func saveEditor():
 		vol.append(c.get_vol())
 	var data = {"list" : list, "name" : listname, "volume" : vol, "groups" : groups}
 	if playlistdata.has(listname):
+		print("Old groups: %s"%[playlistdata[listname]["groups"]])
+		print("new groups: %s"%[groups])
 		playlistdata[listname].merge(data, true) #this preserves metadata if present
-		if selected_index > 0:
+		if selected_index >= 0:
 			#in case list was trashed.
 			%boxListElements.get_child(selected_index).set_trashed(false)
+		print("resulting groups: %s"%[playlistdata[listname]["groups"]])
 	else:
 		playlistdata[listname] = data
 		var n:Node = playlistentryedit.instantiate()
@@ -312,8 +315,14 @@ func onEditorDeleteListContent(index):
 func isEditorNameValid() -> bool:
 	return %txtListName.text.length() > 2
 	
-func onEditorNameChanged(_text):
+func onEditorNameChanged(text):
 	%btnSaveEdit.disabled = not isEditorNameValid()
+	if not text in playlistdata.keys():
+		%txtNewLabel.text = "Nytt navn"
+		%txtnewLabel.tooltip_text = "Denne listen lagres som en ny spilleliste"
+	else:
+		%txtNewLabel.text = " Rediger "
+		%txtnewLabel.tooltip_text = "Denne listen vil overskrive en eksisterende liste."
 	
 func updateListElementIndex():
 	for i in range(%boxListElements.get_child_count()):

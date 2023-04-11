@@ -75,7 +75,8 @@ horizontal_alignment = 1
 [node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/HSplitContainer/Panel/VBoxContainer/VSplitContainer/boxEditor/VBoxContainer/boxContent"]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="VBoxContainer/HSplitContainer/Panel/VBoxContainer/VSplitContainer/boxEditor/VBoxContainer/boxContent/HBoxContainer"]
+[node name="txtNewLabel" type="Label" parent="VBoxContainer/HSplitContainer/Panel/VBoxContainer/VSplitContainer/boxEditor/VBoxContainer/boxContent/HBoxContainer"]
+unique_name_in_owner = true
 layout_mode = 2
 text = "Nytt navn:"
 
@@ -190,11 +191,27 @@ access = 2
 unique_name_in_owner = true
 title = "hjelp"
 size = Vector2i(700, 500)
-dialog_text = "Velkommen til lydspiller redigering. Dette vinduet er delt i to. På venstre side styrer du hvilke lyd-knapper og spillelister som skal vises på spillemenyen, og på høyre side navigerer du frem til filer du ønsker å bruke.
+dialog_text = "Velkommen til lydspiller redigering. Dette vinduet er delt i to. På venstre side styrer du hvilke lyd-knapper og spillelister som skal vises på spillermenyen, og på høyre side navigerer du frem til filer du ønsker å bruke.
 
 For å lage en lyd-knapp, lagre en liste med kun en lyd. Da vil den vises som en knapp på spillemenyen.
 
 For å lage en spilleliste, lagre en liste med to eller flere lyder. Da vil den vises som en liste på spillemenyen.
+
+For å legge til eller slette en låt fra en spilleliste, må den lastes inn i \"NY ELLER REDIGER\"-panelet. Du kan gjøre dette ved å trykke på \"Rediger\" knappen.
+
+Når du redigerer eller lager en liste, vær oppmerksom på liste-navnet. Hvis navnet er det samme som en eksisterende liste, så vil den gamle listen overskries. Dette er derfor hvordan du gjør endringer.
+For å slette en låt fra en liste, trykk på X-knappen i boksen til låten i lista. Vær obs. Denne endringen blir ikke lagret før du trykker på \"Lagre og lukk\".
+
+Du kan velge hvilke gruppe en spille-liste skal vises i. For å gjøre det, trykk på \"Vises i X grupper\"-knappen. Dette åpner et nytt vindu.
+I dette vinduet kan du velge hvilke grupper listen skal vises i, og legge til nye grupper.
+
+For å slette en spilleliste, trykk på X-knappen i boksen til spillelisten. Ved første trykk, så vil lista markeres som søppel (\"TRASH\"). Du vil se det, ved at den markeres rød, og legges på bunnen av lista over spillelister. Når en liste er markert som søppel, vil den ikke vises på spillermenyen.
+For å slette en spilleliste for godt, må spillelisten først være søppel, så trykk på X-knappen igjen. Spillelisten er da slettet.
+
+Trenger du å fjerne en gruppe?
+Dette kan gjøres ved å fjerne gruppen fra alle spillelister som bruker den. Dette inkluderer spillelister markert som søppel.
+
+
 
 (PLANLAGT MEN IKKE IMPLEMENTERT)
 Du kan også bruke en stream-deck eller annen extern ting eller app til å spille av lyder og spillelister. Dette gjøres med websocket protokoll med portnummer (UBESTEMT)

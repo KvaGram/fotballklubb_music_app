@@ -1,8 +1,9 @@
 extends Node
 #singleton utility static class
-class_name util
+class_name Util
 
 static func load_audio(path:String)->AudioStream:
+	print("loading file ", path)
 	var result = AudioLoader.loadfile(path, 0)
 	return result
 #	var file:FileAccess = FileAccess.open(path, FileAccess.READ)

@@ -57,7 +57,7 @@ func _getTrackName(path:String) -> String:
 	if refcache.has(path):
 		stream = refcache[path]
 	else:
-		stream = util.load_audio(path)
+		stream = Util.load_audio(path)
 		refcache[path] = stream
 	
 	var m = floori(stream.get_length() / 60)

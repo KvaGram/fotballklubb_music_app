@@ -19,7 +19,8 @@ config/icon="res://icon.svg"
 
 [autoload]
 
-Util="*res://util.gd"
+util="res://util.gd"
+audioLoader="res://GDScriptAudioImport.gd"
 
 [rendering]
 

@@ -1,6 +1,6 @@
 extends AcceptDialog
 
-const reserved_names:PackedStringArray = ["TRASH"]
+const reserved_names:PackedStringArray = ["TRASH", "ALLE", "INGEN"]
 var groups:PackedStringArray
 var n_groups:Array
 var buttons:Array[CheckBox]

@@ -190,4 +190,4 @@ layout_mode = 2
 [connection signal="pressed" from="VBoxContainer/header/btnStop" to="." method="stop"]
 [connection signal="pressed" from="VBoxContainer/header/btnSettings" to="." method="switchToSettingsScene"]
 [connection signal="value_changed" from="VBoxContainer/header/slidVol" to="." method="_on_slid_vol_value_changed"]
-[connection signal="tab_changed" from="VBoxContainer/boxGroups" to="." method="changeGroupByIndex"]
+[connection signal="tab_changed" from="VBoxContainer/boxGroups" to="." method="_on_group_tab_changed"]

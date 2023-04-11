@@ -32,22 +32,26 @@ func _ready():
 	var status:int = config.load(_config_path)
 	if status == OK:
 		playlistdata = config.get_value("playlists", "lists", {})
-	groups = util.getAllGroups(playlistdata)
+	groups = Util.getAllGroups(playlistdata)
 	sel_group = -1
 	if status == OK:
 		sel_group = groups.find(config.get_value("playlists", "last_group", ""))
 	for c in %boxGroups.get_children():
 		c.free()
+	var n = Control.new()
+	n.name = "ALLE"
+	%boxGroups.add_child(n)
 	for g in groups:
-		var n = Control.new()
+		n = Control.new()
 		n.name = g
 		%boxGroups.add_child(n)
+	
 	if groups.size() > 0:
-		if sel_group < 0:
-			sel_group = 0
-			%boxGroups.current_tab = 0
-		else:
-			%boxGroups.current_tab = sel_group
+		%boxGroups.visible = true
+		changeGroupByIndex(sel_group) #This updates the tab
+	else:
+		sel_group = -1
+		%boxGroups.visible = false
 	
 	populateGrid()
 	#Do not quit application automatically.
@@ -112,7 +116,9 @@ func populateGrid():
 	for e in playlistdata.values():
 		var listgroups = e.get("groups",[])
 		#If a list is trashed, ignore. If a group is selected, ignore if not in group.
-		if "TRASH" in listgroups or (sel_group > 0 and not g in listgroups):
+		if "TRASH" in listgroups:
+			continue
+		if sel_group >= 0 and not g in listgroups:
 			continue
 		var n:PlaylistController = playlistcontroller.instantiate()
 		n.setPlaylist(e)
@@ -192,9 +198,17 @@ func _on_slid_vol_value_changed(value):
 	master_volume = value
 	%txtVol.text = "%3d %%" % [value]
 
-
+func _on_group_tab_changed(value):
+	#changes group, removing the tab's index offset.
+	changeGroupByIndex(value - 1)
 func changeGroupByIndex(groupindex):
-	if groupindex < 0 or groupindex >= groups.size():
-		return
-	sel_group = groupindex
+	#sets sel_group to value ranged -1 to last index in groups.
+	#where a value of -1 means to show all lists.
+	sel_group = clampi(groupindex, -1, groups.size()-1)
+	#update the current tab if not correct to sel_group
+	#offset by 1 to allow for the -1'th index for the "ALLE" (all) tab
+	#meaning tab 0 is index -1, tab 1 is index 0, tab 2 is index 1, etc.
+	if %boxGroups.current_tab != (sel_group+1):
+		%boxGroups.current_tab = sel_group+1
+	
 	populateGrid()
