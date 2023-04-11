@@ -57,7 +57,7 @@ static func loadfile(filepath:String, loop:int = 1):
 		file.close()
 		return AudioStreamWAV.new()
 
-	var bytes = file.get_buffer(file.get_len())
+	var bytes = file.get_buffer(file.get_length())
 	# if File is wav
 	if filepath.ends_with(".wav"):
 		var newstream = AudioStreamWAV.new()
@@ -132,7 +132,7 @@ static func loadfile(filepath:String, loop:int = 1):
 				var data_entry_point = (i+8)
 				print ("Audio data starts at byte " + str(data_entry_point))
 				
-				var data = bytes.subarray(data_entry_point, data_entry_point+audio_data_size-1)
+				var data = bytes.slice(data_entry_point, data_entry_point+audio_data_size)
 				
 				if bits_per_sample in [24, 32]:
 					newstream.data = convert_to_16bit(data, bits_per_sample)
