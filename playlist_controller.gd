@@ -48,13 +48,13 @@ func setPlaylist(newListdata:Dictionary):
 
 func refresh():
 	%PrevAudioName.text = (
-		_getTrackName( list[_clampIndex(getIndex()-1)]) )
+		_getTrackName( list[_wrapIndex(getIndex()-1)]) )
 	%CurrentAudioName1.text = (
-		_getTrackName( list[_clampIndex(getIndex())]) )
+		_getTrackName( list[_wrapIndex(getIndex())]) )
 	%CurrentAudioName2.text = (
-		_getTrackName( list[_clampIndex(getIndex())]) )
+		_getTrackName( list[_wrapIndex(getIndex())]) )
 	%NextAudioName.text = (
-		_getTrackName( list[_clampIndex(getIndex()+1)]) )
+		_getTrackName( list[_wrapIndex(getIndex()+1)]) )
 	%IndexAndLen.text = "%02d / %02d" % [getIndex()+1, list.size()]
 	need_refresh = false
 	
@@ -66,6 +66,8 @@ func _getTrackName(path:String) -> String:
 	var callback = func(data):
 		var stream:AudioStream = data[-1] #stream object is appended when request completes, so it is the last object
 		var selfref:PlaylistController = data[2]
+#		if(stream.get_length() < 0.1):
+#			printerr("no length?")
 		var m = floori(stream.get_length() / 60)
 		var s = floori(stream.get_length()) % 60
 		var label:String = "%s - (%02d:%02d)"%[path.get_file().get_basename(), m, s]
@@ -76,17 +78,16 @@ func _getTrackName(path:String) -> String:
 	#print("requesting " + path)
 	return "%s - (??:??)"%[path.get_file().get_basename()] #return placeholder label with unknown time
 	
-#used when setting the index.
-func _clampIndex(ind:int) -> int:
+#used when setting the index. Wraps the index within range [0, list.size()-1]
+func _wrapIndex(ind:int) -> int:
 	var s = list.size()
 	if s <= 0:
 		return -1 #a what the f.. failsafe. case of empty list.
-	return clampi(ind, 0, s-1)
-#	while ind >= s:
-#		ind -= s
-#	while ind < 0:
-#		ind += s
-#	return ind
+	while ind >= s:
+		ind -= s
+	while ind < 0:
+		ind += s
+	return ind
 
 func getAuto()->bool:
 	return listdata.get("play_auto", false)
@@ -107,7 +108,7 @@ func reset():
 func getIndex() -> int:
 	return listdata.get("play_index", -1)
 func setIndex(value:int):
-	listdata["play_index"] = _clampIndex(value)
+	listdata["play_index"] = _wrapIndex(value)
 	need_refresh = true
 
 #When the playbutton is pressed. 
