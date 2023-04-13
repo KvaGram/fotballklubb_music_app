@@ -12,7 +12,8 @@ var selected_index = -1
 @export var ignore_nonmusic = false #hides filetypes not in SUPPORTED
 @onready var playlistentryedit:PackedScene = preload("res://playlistentryedit.tscn")
 
-var wav_warn_flag:bool=false
+#wav issue may have been fixed now
+#var wav_warn_flag:bool=false
 
 const error_text1:String ='Denne musikk-appen støtter .mp3 og noen .wav filer.
 
@@ -29,12 +30,12 @@ Programmet prøvde å testspille
 %s
 men lyden ble ikke lastet inn riktig. Er datafilen borte?
 '
-const error_text4:String ='Du legger til en wav fil i en spilleliste.
-Dette er det akuratt nå begrenset støtte for.
-Hvis lyden kommer ut feil, konverter den til en mp3, og legg den inn på nytt.
-
-Denne advarselen vil ikke vises igen før du åpner
-åpner redigeringspanelet på nytt'
+#const error_text4:String ='Du legger til en wav fil i en spilleliste.
+#Dette er det akuratt nå begrenset støtte for.
+#Hvis lyden kommer ut feil, konverter den til en mp3, og legg den inn på nytt.
+#
+#Denne advarselen vil ikke vises igen før du åpner
+#åpner redigeringspanelet på nytt'
 
 const error_text5:String ='Du har forsøkt å lage en helt tom spilleliste.
 Dette er ikke mulig. Legg til en lyd eller fler, og prøv igjen'
@@ -239,9 +240,9 @@ func clearEditor():
 	
 	
 func addListEntry(path:String):
-	if path.get_extension().contains("wav") and not wav_warn_flag:
-		show_error(error_text4)
-		wav_warn_flag = true
+#	if path.get_extension().contains("wav") and not wav_warn_flag:
+#		show_error(error_text4)
+#		wav_warn_flag = true
 	var n:Node = playlistentryedit.instantiate()
 	n.set_mode(PlaylistEntry.ENTRYMODE.AUDIOENTRY)
 	n.set_text(path)
@@ -391,5 +392,6 @@ func switchToPlayScene():
 func _on_groups_dialog_bad_group_name(bad_name):
 	show_error(error_text7 % [bad_name])
 
-
-
+#When hitting enter on the playlist name field, save the list.
+func _on_txt_list_name_text_submitted(_text):
+	saveEditor()
