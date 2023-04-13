@@ -22,6 +22,12 @@ config/icon="res://icon.svg"
 util="res://util.gd"
 audioLoader="res://GDScriptAudioImport.gd"
 
+[display]
+
+window/size/viewport_width=1500
+window/size/viewport_height=800
+window/stretch/mode="viewport"
+
 [rendering]
 
 renderer/rendering_method="gl_compatibility"

@@ -14,7 +14,7 @@ var groups:PackedStringArray
 var sel_group:int
 
 var cache:Dictionary #where key is path as a string, value is audiostream.
-var loadrequest:Array
+var loadrequest:Array #where value is an array, index 0 is a path in string, index 1 is a callable and is optional.
 
 @onready var playlistcontroller:PackedScene = preload("res://playlist_controller.tscn")
 
@@ -67,13 +67,32 @@ func _process(_delta):
 	elif was_playing_audio:
 		onAudioFinished()
 	if loadrequest.size() > 0:
-		nextPreload()
-func nextPreload():
-	var path = loadrequest.pop_front()
-	if cache.has(path):
-		return nextPreload()
-	cache[path] = Util.load_audio(path)	
-
+		nextLoad()
+#process next request for a stream object
+func nextLoad():
+	var requestPacket:Array = loadrequest.pop_front()
+	var path = requestPacket[0]
+	if not cache.has(path):
+		cache[path] = Util.load_audio(path)
+	_completeRequest(requestPacket)
+#add a request for a stream object, fullfills it if already loaded.
+func requestStream(requestPacket:Array, urgent:bool = false):
+	#print("Recived request %s"%[requestPacket])
+	var path = requestPacket[0]
+	if cache.has(path) and requestPacket.size() > 1:
+		_completeRequest(requestPacket)
+	elif urgent:
+		loadrequest.push_front(requestPacket)
+	else:
+		loadrequest.push_back(requestPacket)
+#fullfills the request for stream object
+func _completeRequest(requestPacket:Array):
+	var path = requestPacket[0]
+	var callback:Callable = (func (_data): return) if requestPacket.size() < 2 else requestPacket[1]
+	requestPacket.append(cache[path])
+	callback.call_deferred(requestPacket)
+	#callback.call(requestPacket)
+	
 #Ensure the app does not close untill anything important is saved.
 func _notification(what):
 	if what == NOTIFICATION_WM_CLOSE_REQUEST:
@@ -124,8 +143,7 @@ func populateGrid():
 		n.setPlaylist(e)
 		n.play.connect(play)
 		n.stop.connect(stop)
-		#Adds refrences to the audio stream cache
-		n.refcache = cache
+		n.requestStream.connect(requestStream)
 		var i = e.get("list_index", -1)
 		if(i < 0 or i > entries.size()):
 			entries.append(n) #in the event of indecies missing or out of range
@@ -154,6 +172,7 @@ func play(path:String, volume:int, callback:PlaylistController = null):
 	#enable new visualizer
 	if(callback):
 		callback.setPlaying(true)
+	#NOTE: consider using RequestStream with priority here.
 	if not cache.has(path):
 		cache[path] = Util.load_audio(path)
 	audio.stream = cache[path]

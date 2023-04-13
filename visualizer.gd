@@ -10,7 +10,7 @@ const FREQ_STEP:float = 11050 / VU_COUNT
 const MIN_DB:float = 60
 const SCALE:float = 10
 
-func _process(delta):
+func _process(_delta):
 	queue_redraw()
 
 #draws a representation of the audio playing.
